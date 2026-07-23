@@ -123,15 +123,43 @@ function save() {
   }, 500);
 }
 
-/* ========== 视图切换 ========== */
+/* ========== 视图切换（更新标题） ========== */
 function switchView(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(view).classList.add('active');
+  
+  // 更新导航高亮
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  const navMap = {
+    'gallery': 0,
+    'dashboard': 1,
+    'calendar': 2
+  };
+  const navItems = document.querySelectorAll('.nav-item');
+  if (navMap[view] !== undefined) {
+    navItems[navMap[view]].classList.add('active');
+  }
+  
+  // 更新标题
+  const titles = {
+    'gallery': '📚 书墙',
+    'dashboard': '📊 仪表盘',
+    'calendar': '📅 日历'
+  };
+  const titleEl = document.getElementById('viewTitle');
+  if (titleEl) {
+    titleEl.textContent = titles[view] || '📚 书墙';
+  }
 }
 
 /* ========== 主题切换 ========== */
 function toggleTheme() {
   document.body.classList.toggle('dark');
+  // 更新主题按钮图标
+  const themeBtn = document.querySelector('.nav-footer .nav-item .nav-icon');
+  if (themeBtn) {
+    themeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  }
 }
 
 /* ========== 添加书 ========== */
@@ -169,28 +197,39 @@ function addBook() {
 
 /* ========== 渲染卡片 ========== */
 function render() {
-  const gallery = document.getElementById("gallery");
-  if (!gallery) return;
-  gallery.innerHTML = "";
+  const grid = document.getElementById("booksGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
 
   if (!books || books.length === 0) {
-    gallery.innerHTML = '<p style="color:#999;text-align:center;grid-column:1/-1;padding:40px 0;">📚 还没有书籍，点击右上角"＋ 添加"开始吧</p>';
+    grid.innerHTML = '<p style="color:#999;text-align:center;grid-column:1/-1;padding:60px 0;font-size:16px;">📚 还没有书籍，点击右上角"＋ 添加"开始吧</p>';
     return;
   }
 
   books.forEach((b, i) => {
     const div = document.createElement("div");
-    div.className = "card";
+    div.className = "book-card";
 
-    const coverImg = b.封面 || 'https://via.placeholder.com/150x200?text=No+Cover';
+    const coverImg = b.封面 || 'https://via.placeholder.com/300x450?text=No+Cover';
+    
+    // 状态标签
+    let statusClass = 'status-unread';
+    let statusText = '未读';
+    if (b.阅读状态 === '在读') { statusClass = 'status-reading'; statusText = '在读'; }
+    else if (b.阅读状态 === '已读') { statusClass = 'status-read'; statusText = '已读'; }
+    else if (b.阅读状态 === '弃读') { statusClass = 'status-abandoned'; statusText = '弃读'; }
     
     div.innerHTML = `
-      <img src="${coverImg}" alt="${b.书名 || '未命名'}">
-      <p>${b.书名 || '未命名'}</p>
+      <img class="book-cover" src="${coverImg}" alt="${b.书名 || '未命名'}">
+      <div class="book-info">
+        <div class="book-title">${b.书名 || '未命名'}</div>
+        <div class="book-author">${b.作者 || '未知作者'}</div>
+        <span class="book-status ${statusClass}">${statusText}</span>
+      </div>
     `;
 
     div.onclick = () => openDetail(i);
-    gallery.appendChild(div);
+    grid.appendChild(div);
   });
 }
 
@@ -736,9 +775,9 @@ async function deleteBook() {
 /* ========== 搜索 ========== */
 function searchBooks() {
   const q = document.getElementById("search").value.toLowerCase();
-  document.querySelectorAll(".card").forEach(card => {
+  document.querySelectorAll(".book-card").forEach(card => {
     const text = card.textContent.toLowerCase();
-    card.style.display = text.includes(q) ? "block" : "none";
+    card.style.display = text.includes(q) ? "" : "none";
   });
 }
 
@@ -786,6 +825,9 @@ async function init() {
     books = JSON.parse(localStorage.getItem("books") || "[]");
     render();
   }
+  
+  // 默认激活书墙
+  switchView('gallery');
 }
 
 // 启动应用
