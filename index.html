@@ -24,6 +24,7 @@
     <input type="text" id="search" placeholder="搜索书名 / 标签..." oninput="searchBooks()">
     <button onclick="toggleTheme()">🌙</button>
     <button onclick="addBook()">＋ 添加</button>
+    <button onclick="showStorageInfo()" style="background:#666;">💾</button>
   </div>
 
   <!-- Views -->
@@ -46,6 +47,8 @@
   <div id="viewer"></div>
 </div>
 
+<!-- 引入 storage.js -->
+<script src="storage.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
