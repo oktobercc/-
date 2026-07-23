@@ -440,6 +440,7 @@ body.dark .file-upload-area.dragover {
   border-color: #dcb146;
   background: rgba(220, 177, 70, 0.1);
 }
+
 /* 响应式适配 */
 @media (max-width: 768px) {
   .sidebar {
@@ -544,4 +545,18 @@ body.dark ::-webkit-scrollbar-track {
 
 body.dark ::-webkit-scrollbar-thumb {
   background: #dcb146;
+}
+
+/* 存储信息按钮 */
+.topbar button:last-child {
+  background: #666;
+}
+
+.topbar button:last-child:hover {
+  background: #555;
+}
+
+/* EPUB 状态显示 */
+.file-item .file-type-badge[style*="#27ae60"] {
+  background: #27ae60 !important;
 }
