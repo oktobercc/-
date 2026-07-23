@@ -1,0 +1,99 @@
+:root {
+  --bg: #ffffff;
+  --text: #111;
+  --card: #f7f7f7;
+}
+
+body.dark {
+  --bg: #1e1e1e;
+  --text: #eee;
+  --card: #2a2a2a;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* 顶栏 */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-weight: bold;
+}
+
+.topbar input {
+  flex: 1;
+  margin: 0 20px;
+  padding: 8px;
+}
+
+.actions button {
+  margin-left: 10px;
+}
+
+/* IG 卡片流 */
+#grid {
+  column-count: 4;
+  column-gap: 12px;
+  padding: 12px;
+}
+
+.card {
+  background: var(--card);
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+}
+
+.card .info {
+  padding: 8px;
+}
+
+/* 抽屉 */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: var(--bg);
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+}
+
+.hidden {
+  display: none;
+}
+
+.drawer-content {
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+/* 阅读器 */
+#reader {
+  height: 400px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.reader-controls {
+  text-align: center;
+  margin-top: 10px;
+}
