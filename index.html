@@ -1,52 +1,56 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reading OS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading OS</title>
 
-  <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css">
 
-  <!-- ePub.js -->
-  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+<!-- ePub.js -->
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+
 </head>
 
-<body>
+<body class="light">
 
-<header class="topbar">
-  <div class="logo">📚 Reading OS</div>
+<!-- Sidebar -->
+<div class="sidebar">
+  <h1>页间集</h1>
+  <button onclick="switchView('gallery')">☃书墙</button>
+  <button onclick="switchView('dashboard')">☢仪表盘</button>
+  <button onclick="switchView('calendar')">㏘日历</button>
+</div>
 
-  <input id="search" placeholder="搜索书名 / 标签..." />
+<!-- Main -->
+<div class="main">
 
-  <div class="actions">
-    <button id="addBtn">＋</button>
-    <button id="toggleTheme">🌙</button>
+  <!-- Topbar -->
+  <div class="topbar">
+    <input type="text" id="search" placeholder="搜索书名 / 标签..." oninput="searchBooks()">
+    <button onclick="toggleTheme()">🌙</button>
+    <button onclick="addBook()">＋ 添加</button>
   </div>
-</header>
 
-<main id="grid"></main>
+  <!-- Views -->
+  <div id="gallery" class="view active"></div>
+  <div id="dashboard" class="view"></div>
+  <div id="calendar" class="view"></div>
 
-<!-- 详情抽屉 -->
+</div>
+
+<!-- Drawer -->
 <div id="drawer" class="drawer hidden">
-  <div class="drawer-content">
-    <span id="closeDrawer">✕</span>
+  <div class="drawer-content" id="drawerContent"></div>
+</div>
 
-    <div id="detail"></div>
-
-    <!-- 阅读器 -->
-    <div id="readerSection">
-      <input type="file" id="uploadEpub" accept=".epub"/>
-      <button id="startRead">开始阅读</button>
-
-      <div id="reader"></div>
-
-      <div class="reader-controls">
-        <button onclick="prevPage()">←</button>
-        <button onclick="nextPage()">→</button>
-      </div>
-    </div>
-
+<!-- Reader -->
+<div id="reader" class="reader hidden">
+  <div class="reader-bar">
+    <button onclick="closeReader()">← 返回</button>
+    <button onclick="toggleTheme()">🌙</button>
   </div>
+  <div id="viewer"></div>
 </div>
 
 <script src="app.js"></script>
