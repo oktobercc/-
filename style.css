@@ -1,4 +1,4 @@
-/* ========== 全局重置 & 基础 ========== */
+/* ========== 全局重置 ========== */
 * {
   margin: 0;
   padding: 0;
@@ -13,7 +13,7 @@ body {
   color: #262626;
 }
 
-/* ========== 侧边栏 ========== */
+/* ========== 侧边栏 - Instagram风格 ========== */
 .sidebar {
   width: 72px;
   background: #ffffff;
@@ -28,13 +28,13 @@ body {
   bottom: 0;
   z-index: 100;
   transition: width 0.2s ease;
-  overflow: hidden;
 }
 
 .sidebar:hover {
   width: 220px;
 }
 
+/* Logo */
 .sidebar .logo {
   display: flex;
   align-items: center;
@@ -65,6 +65,7 @@ body {
   opacity: 1;
 }
 
+/* 导航项容器 */
 .sidebar .nav-items {
   flex: 1;
   display: flex;
@@ -81,6 +82,7 @@ body {
   padding-top: 8px;
 }
 
+/* 导航项 */
 .nav-item {
   display: flex;
   align-items: center;
@@ -93,7 +95,10 @@ body {
   position: relative;
 }
 
-.nav-item:hover,
+.nav-item:hover {
+  background: #f2f2f2;
+}
+
 .nav-item.active {
   background: #f2f2f2;
 }
@@ -118,15 +123,50 @@ body {
   opacity: 1;
 }
 
+/* 导航项工具提示（悬停时显示） */
+.nav-item .tooltip {
+  position: absolute;
+  left: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #262626;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 200;
+}
+
+.nav-item .tooltip::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: #262626;
+}
+
+.sidebar:not(:hover) .nav-item:hover .tooltip {
+  opacity: 1;
+}
+
+.sidebar:hover .nav-item .tooltip {
+  display: none;
+}
+
 /* ========== 主内容区 ========== */
 .main {
   flex: 1;
-  margin-left: 90px;
+  margin-left: 120px;  /* 增加左侧距离，保证侧栏展开不遮挡书籍 */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: #fafafa;
-  transition: margin-left 0.2s ease;
 }
 
 /* ========== Topbar ========== */
@@ -181,7 +221,7 @@ body {
   transition: all 0.2s;
 }
 
-/* 添加按钮：灰底深灰字 */
+/* ===== 添加按钮：灰底深灰字 ===== */
 .add-btn {
   background: #eaeaea;
   border: none;
@@ -218,12 +258,9 @@ body {
 /* ========== 书籍网格 ========== */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 30px;
-  padding: 8px 0;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 每本书更宽 */
+  gap: 32px;
+  padding: 4px 0;
 }
 
 .book-card {
@@ -233,7 +270,6 @@ body {
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  width: 100%;
 }
 
 .book-card:hover {
@@ -253,7 +289,7 @@ body {
 }
 
 .book-card .book-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #262626;
   margin-bottom: 4px;
@@ -264,7 +300,7 @@ body {
 }
 
 .book-card .book-author {
-  font-size: 13px;
+  font-size: 12px;
   color: #8e8e8e;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -281,10 +317,25 @@ body {
   font-weight: 500;
 }
 
-.status-unread   { background: #f0f0f0; color: #8e8e8e; }
-.status-reading  { background: #dcb146; color: white; }
-.status-read     { background: #27ae60; color: white; }
-.status-abandoned{ background: #e74c3c; color: white; }
+.status-unread {
+  background: #f0f0f0;
+  color: #8e8e8e;
+}
+
+.status-reading {
+  background: #dcb146;
+  color: white;
+}
+
+.status-read {
+  background: #27ae60;
+  color: white;
+}
+
+.status-abandoned {
+  background: #e74c3c;
+  color: white;
+}
 
 /* ========== Drawer ========== */
 .drawer {
@@ -305,13 +356,17 @@ body {
   to { transform: translateX(0); }
 }
 
-.drawer-content { padding: 30px; }
+.drawer-content {
+  padding: 30px;
+}
+
 .drawer-content h2 {
   margin-top: 0;
   color: #dcb146;
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 15px;
 }
+
 .drawer-content label {
   display: block;
   margin-top: 16px;
@@ -320,6 +375,7 @@ body {
   font-weight: 600;
   color: #555;
 }
+
 .drawer-content input,
 .drawer-content textarea,
 .drawer-content select {
@@ -331,24 +387,32 @@ body {
   box-sizing: border-box;
   font-family: inherit;
 }
-.drawer-content textarea { min-height: 80px; resize: vertical; }
+
+.drawer-content textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
 .drawer-content hr {
   margin: 20px 0;
   border: none;
   border-top: 1px solid #f0f0f0;
 }
+
 .drawer-content .info-row {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid #f5f5f5;
 }
+
 .drawer-content .btn-group {
   display: flex;
   gap: 10px;
   margin-top: 20px;
   flex-wrap: wrap;
 }
+
 .drawer-content .btn-group button {
   flex: 1;
   padding: 10px;
@@ -358,21 +422,33 @@ body {
   font-size: 14px;
   transition: background 0.2s;
 }
+
 .btn-primary {
   background: #dcb146;
   color: white;
 }
-.btn-primary:hover { background: #c49a3a; }
+
+.btn-primary:hover {
+  background: #c49a3a;
+}
+
 .btn-danger {
   background: #e74c3c;
   color: white;
 }
-.btn-danger:hover { background: #c0392b; }
+
+.btn-danger:hover {
+  background: #c0392b;
+}
+
 .btn-secondary {
   background: #ecf0f1;
   color: #333;
 }
-.btn-secondary:hover { background: #dde1e3; }
+
+.btn-secondary:hover {
+  background: #dde1e3;
+}
 
 /* ========== Reader ========== */
 .reader {
@@ -381,6 +457,7 @@ body {
   background: white;
   z-index: 2000;
 }
+
 .reader-bar {
   padding: 12px 20px;
   border-bottom: 1px solid #ddd;
@@ -388,6 +465,7 @@ body {
   gap: 10px;
   align-items: center;
 }
+
 .reader-bar button {
   padding: 6px 16px;
   border: none;
@@ -397,10 +475,114 @@ body {
   cursor: pointer;
   font-size: 14px;
 }
-#viewer { height: calc(100% - 60px); }
 
-/* ========== 工具类 ========== */
-.hidden { display: none !important; }
+#viewer {
+  height: calc(100% - 60px);
+}
+
+/* ========== Hidden ========== */
+.hidden {
+  display: none !important;
+}
+
+/* ========== Dark mode ========== */
+body.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark .sidebar {
+  background: #1e1e1e;
+  border-right-color: #333;
+}
+
+body.dark .nav-item:hover,
+body.dark .nav-item.active {
+  background: #2d2d2d;
+}
+
+body.dark .nav-item .nav-label {
+  color: #e0e0e0;
+}
+
+body.dark .topbar {
+  background: #1e1e1e;
+  border-bottom-color: #333;
+}
+
+body.dark .topbar input[type="text"] {
+  background: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+body.dark .topbar input[type="text"]:focus {
+  background: #333;
+  border-color: #dcb146;
+}
+
+body.dark .add-btn {
+  background: #3a3a3a;
+  color: #bfbfbf;
+  border: none;
+}
+
+body.dark .add-btn:hover {
+  background: #4a4a4a;
+}
+
+body.dark .book-card {
+  background: #1e1e1e;
+}
+
+body.dark .book-card .book-title {
+  color: #e0e0e0;
+}
+
+body.dark .book-card .book-author {
+  color: #888;
+}
+
+body.dark .drawer {
+  background: #1e1e1e;
+}
+
+body.dark .drawer-content label {
+  color: #aaa;
+}
+
+body.dark .drawer-content input,
+body.dark .drawer-content textarea,
+body.dark .drawer-content select {
+  background: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+body.dark .drawer-content hr {
+  border-top-color: #444;
+}
+
+body.dark .drawer-content .info-row {
+  border-bottom-color: #444;
+}
+
+body.dark .reader {
+  background: #1e1e1e;
+}
+
+body.dark .reader-bar {
+  border-bottom-color: #444;
+}
+
+body.dark .storage-btn {
+  background: #333;
+  color: #e0e0e0;
+}
+
+body.dark .storage-btn:hover {
+  background: #444;
+}
 
 /* ========== 文件上传相关 ========== */
 .file-upload-area {
@@ -410,10 +592,12 @@ body {
   margin-top: 8px;
   transition: all 0.3s;
 }
+
 .file-upload-area.dragover {
   border-color: #dcb146;
   background: rgba(220, 177, 70, 0.05);
 }
+
 .file-item {
   display: flex;
   align-items: center;
@@ -424,6 +608,7 @@ body {
   margin-top: 6px;
   gap: 10px;
 }
+
 .file-item .file-info {
   display: flex;
   align-items: center;
@@ -431,6 +616,7 @@ body {
   flex: 1;
   overflow: hidden;
 }
+
 .file-item .file-name {
   font-size: 13px;
   color: #333;
@@ -438,7 +624,13 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.file-item .file-size { font-size: 12px; color: #999; white-space: nowrap; }
+
+.file-item .file-size {
+  font-size: 12px;
+  color: #999;
+  white-space: nowrap;
+}
+
 .file-item .file-type-badge {
   padding: 2px 8px;
   border-radius: 4px;
@@ -448,6 +640,7 @@ body {
   color: white;
   white-space: nowrap;
 }
+
 .file-item .remove-file {
   background: none;
   border: none;
@@ -456,15 +649,28 @@ body {
   font-size: 16px;
   padding: 0 4px;
 }
-.file-item .remove-file:hover { color: #c0392b; }
+
+.file-item .remove-file:hover {
+  color: #c0392b;
+}
+
 .upload-options {
   display: flex;
   gap: 10px;
   margin-top: 8px;
   flex-wrap: wrap;
 }
-.upload-options input[type="file"] { flex: 1; min-width: 120px; }
-.upload-options input[type="text"] { flex: 2; min-width: 150px; }
+
+.upload-options input[type="file"] {
+  flex: 1;
+  min-width: 120px;
+}
+
+.upload-options input[type="text"] {
+  flex: 2;
+  min-width: 150px;
+}
+
 .upload-options button {
   padding: 6px 16px;
   background: #dcb146;
@@ -475,7 +681,12 @@ body {
   font-size: 13px;
   white-space: nowrap;
 }
-.upload-options button:hover { background: #c49a3a; }
+
+.upload-options button:hover {
+  background: #c49a3a;
+}
+
+/* 阅读按钮 */
 .read-file-btn {
   background: #e67e22;
   color: white;
@@ -486,60 +697,24 @@ body {
   font-size: 14px;
   transition: background 0.2s;
 }
-.read-file-btn:hover { background: #d35400; }
 
-/* ========== Dark mode ========== */
-body.dark {
-  background: #121212;
-  color: #e0e0e0;
+.read-file-btn:hover {
+  background: #d35400;
 }
-body.dark .sidebar {
-  background: #1e1e1e;
-  border-right-color: #333;
-}
-body.dark .nav-item:hover,
-body.dark .nav-item.active { background: #2d2d2d; }
-body.dark .nav-item .nav-label { color: #e0e0e0; }
-body.dark .topbar {
-  background: #1e1e1e;
-  border-bottom-color: #333;
-}
-body.dark .topbar input[type="text"] {
+
+/* ========== 暗色模式文件上传 ========== */
+body.dark .file-item {
   background: #2d2d2d;
+}
+
+body.dark .file-item .file-name {
   color: #e0e0e0;
-  border-color: #444;
 }
-body.dark .topbar input[type="text"]:focus {
-  background: #333;
-  border-color: #dcb146;
+
+body.dark .file-upload-area {
+  border-color: #555;
 }
-body.dark .add-btn {
-  background: #3a3a3a;
-  color: #bfbfbf;
-  border: none;
-}
-body.dark .add-btn:hover { background: #4a4a4a; }
-body.dark .book-card { background: #1e1e1e; }
-body.dark .book-card .book-title { color: #e0e0e0; }
-body.dark .book-card .book-author { color: #888; }
-body.dark .drawer { background: #1e1e1e; }
-body.dark .drawer-content label { color: #aaa; }
-body.dark .drawer-content input,
-body.dark .drawer-content textarea,
-body.dark .drawer-content select {
-  background: #2d2d2d;
-  color: #e0e0e0;
-  border-color: #444;
-}
-body.dark .drawer-content hr { border-top-color: #444; }
-body.dark .drawer-content .info-row { border-bottom-color: #444; }
-body.dark .reader { background: #1e1e1e; }
-body.dark .reader-bar { border-bottom-color: #444; }
-body.dark .storage-btn { background: #333; color: #e0e0e0; }
-body.dark .storage-btn:hover { background: #444; }
-body.dark .file-item { background: #2d2d2d; }
-body.dark .file-item .file-name { color: #e0e0e0; }
-body.dark .file-upload-area { border-color: #555; }
+
 body.dark .file-upload-area.dragover {
   border-color: #dcb146;
   background: rgba(220, 177, 70, 0.1);
@@ -547,31 +722,139 @@ body.dark .file-upload-area.dragover {
 
 /* ========== 响应式 ========== */
 @media (max-width: 768px) {
-  .sidebar { width: 56px; padding: 12px 0; }
-  .sidebar:hover { width: 180px; }
-  .main { margin-left: 70px; }
-  .topbar { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
-  .topbar input[type="text"] { width: 140px; }
-  .topbar input[type="text"]:focus { width: 180px; }
-  .view { padding: 16px; }
-  .books-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-  .drawer { width: 100%; max-width: 100%; }
-}
-@media (max-width: 480px) {
-  .sidebar { width: 48px; padding: 8px 0; }
-  .sidebar:hover { width: 140px; }
-  .main { margin-left: 60px; }
-  .books-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-  .topbar input[type="text"] { width: 100px; font-size: 12px; }
-  .topbar input[type="text"]:focus { width: 140px; }
-  .view { padding: 12px; }
-  .drawer-content { padding: 15px; }
+  .sidebar {
+    width: 56px;
+    padding: 12px 0;
+  }
+  .sidebar .logo h1 {
+    font-size: 22px;
+  }
+  .sidebar:hover {
+    width: 180px;
+  }
+  .nav-item {
+    padding: 10px 12px;
+  }
+  .nav-item .nav-icon {
+    font-size: 20px;
+  }
+  .main {
+    margin-left: 80px;
+  }
+  .topbar {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar-left h2 {
+    font-size: 18px;
+  }
+  .topbar input[type="text"] {
+    width: 140px;
+  }
+  .topbar input[type="text"]:focus {
+    width: 180px;
+  }
+  .view {
+    padding: 16px;
+  }
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+  }
+  .drawer {
+    width: 100%;
+    max-width: 100%;
+  }
+  .drawer-content {
+    padding: 20px;
+  }
+  .upload-options {
+    flex-direction: column;
+  }
+  .upload-options input[type="file"],
+  .upload-options input[type="text"] {
+    flex: none;
+    width: 100%;
+  }
 }
 
-/* ========== 滚动条 ========== */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f0f0f0; }
-::-webkit-scrollbar-thumb { background: #dcb146; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #c49a3a; }
-body.dark ::-webkit-scrollbar-track { background: #2d2d2d; }
-body.dark ::-webkit-scrollbar-thumb { background: #dcb146; }
+@media (max-width: 480px) {
+  .sidebar {
+    width: 48px;
+    padding: 8px 0;
+  }
+  .sidebar .logo h1 {
+    font-size: 18px;
+  }
+  .sidebar:hover {
+    width: 140px;
+  }
+  .nav-item {
+    padding: 8px 10px;
+  }
+  .nav-item .nav-icon {
+    font-size: 18px;
+  }
+  .nav-item .nav-label {
+    font-size: 12px;
+  }
+  .main {
+    margin-left: 64px;
+  }
+  .books-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+  }
+  .topbar input[type="text"] {
+    width: 100px;
+    font-size: 12px;
+  }
+  .topbar input[type="text"]:focus {
+    width: 140px;
+  }
+  .topbar button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .view {
+    padding: 12px;
+  }
+  .drawer-content {
+    padding: 15px;
+  }
+  .drawer-content .btn-group {
+    flex-direction: column;
+  }
+  .drawer-content .btn-group button {
+    flex: none;
+    width: 100%;
+  }
+}
+
+/* ========== 滚动条美化 ========== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dcb146;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c49a3a;
+}
+
+body.dark ::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  background: #dcb146;
+}
