@@ -25,13 +25,10 @@ const viewTitle = $('viewTitle');
 
 // ========== 导航切换 ==========
 function switchView(viewName) {
-  // 隐藏所有视图
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  // 显示目标视图
   const targetView = document.getElementById(viewName);
   if (targetView) targetView.classList.add('active');
   
-  // 更新导航高亮
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(item => {
     if (item.dataset.view === viewName) {
@@ -39,12 +36,7 @@ function switchView(viewName) {
     }
   });
   
-  // 更新标题
-  const titles = {
-    'gallery': '书架',
-    'dashboard': '仪表盘',
-    'calendar': '日历'
-  };
+  const titles = { 'gallery': '书架', 'dashboard': '仪表盘', 'calendar': '日历' };
   if (viewTitle) viewTitle.textContent = titles[viewName] || '书架';
 }
 
@@ -155,11 +147,13 @@ function formatFileSize(bytes) {
   if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
   return (bytes/1048576).toFixed(1) + ' MB';
 }
+
 function getFileExtension(filename) {
   if (!filename) return '';
   const parts = filename.split('.');
   return parts.length > 1 ? parts.pop().toLowerCase() : '';
 }
+
 function readFileAsArrayBuffer(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -197,6 +191,11 @@ function addBook() {
   save();
   render();
   openDetail(books.length - 1);
+}
+
+// ========== 关闭抽屉 ==========
+function closeDrawer() {
+  drawer.classList.add('hidden');
 }
 
 // ========== 打开详情 ==========
@@ -287,4 +286,6 @@ function generateAttachmentsHtml(attachments) {
         <div class="file-info">
           <span>${icon}</span>
           <span class="file-name" title="${name}">${name}</span>
-          ${ext ? `<span class="file-type-badge
+          ${ext ? `<span class="file-type-badge">${ext.toUpperCase()}</span>` : ''}
+          ${epubBadge}
+          ${storedBadge
