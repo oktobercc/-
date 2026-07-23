@@ -440,3 +440,108 @@ body.dark .file-upload-area.dragover {
   border-color: #dcb146;
   background: rgba(220, 177, 70, 0.1);
 }
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+    padding: 10px;
+  }
+  
+  .sidebar h1 {
+    font-size: 1em;
+    text-align: center;
+  }
+  
+  .sidebar button {
+    font-size: 12px;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .drawer {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .drawer-content {
+    padding: 20px;
+  }
+  
+  #gallery {
+    grid-template-columns: repeat(auto-fill, 120px);
+    gap: 16px;
+  }
+  
+  .card img {
+    height: 160px;
+  }
+  
+  .topbar {
+    flex-wrap: wrap;
+  }
+  
+  .topbar input[type="text"] {
+    min-width: 120px;
+  }
+  
+  .upload-options {
+    flex-direction: column;
+  }
+  
+  .upload-options input[type="file"],
+  .upload-options input[type="text"] {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #gallery {
+    grid-template-columns: repeat(auto-fill, 100px);
+    gap: 12px;
+  }
+  
+  .card img {
+    height: 130px;
+  }
+  
+  .drawer-content {
+    padding: 15px;
+  }
+  
+  .drawer-content .btn-group {
+    flex-direction: column;
+  }
+  
+  .drawer-content .btn-group button {
+    flex: none;
+    width: 100%;
+  }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dcb146;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c49a3a;
+}
+
+body.dark ::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  background: #dcb146;
+}
