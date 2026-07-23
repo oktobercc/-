@@ -560,3 +560,30 @@ body.dark ::-webkit-scrollbar-thumb {
 .file-item .file-type-badge[style*="#27ae60"] {
   background: #27ae60 !important;
 }
+/* 附件中的阅读按钮 */
+.read-file-btn {
+  background: #e67e22;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.read-file-btn:hover {
+  background: #d35400;
+}
+
+/* 附件列表中的按钮组 */
+.file-item .file-info + div {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+/* EPUB 标签样式 */
+.file-type-badge[style*="#e67e22"] {
+  background: #e67e22 !important;
+}
