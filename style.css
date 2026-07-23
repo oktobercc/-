@@ -221,13 +221,15 @@ body {
   transition: all 0.2s;
 }
 
+/* ===== 修改：添加按钮 浅灰底、无边框、深灰色文字 ===== */
 .add-btn {
-border:2px solid #fff;
-  color: #fff;
+  background: #eaeaea;      /* 浅灰底 */
+  border: none;            /* 无边框 */
+  color: #5a5a5a;          /* 略深的灰色文字 */
 }
 
 .add-btn:hover {
-  background: d2d2d2;
+  background: #d5d5d5;      /* 悬停略微加深，保持风格 */
   transform: scale(1.02);
 }
 
@@ -517,6 +519,17 @@ body.dark .topbar input[type="text"] {
 body.dark .topbar input[type="text"]:focus {
   background: #333;
   border-color: #dcb146;
+}
+
+/* 暗色模式下添加按钮保持浅灰底+深灰字，同时适应暗色背景 */
+body.dark .add-btn {
+  background: #3a3a3a;      /* 暗色模式下的浅灰底 */
+  color: #bfbfbf;           /* 略深的灰色文字，在暗色背景下可读 */
+  border: none;
+}
+
+body.dark .add-btn:hover {
+  background: #4a4a4a;
 }
 
 body.dark .book-card {
