@@ -7,7 +7,7 @@ let currentBook = null;
 let currentIndex = -1;
 let startTime = null;
 let rendition;
-let isSyncing = false; // 防止并发同步
+let isSyncing = false;
 
 /* ========== 云端同步 ========== */
 async function saveToCloud() {
@@ -15,8 +15,34 @@ async function saveToCloud() {
   isSyncing = true;
   
   try {
-    // 注意：JSONBin 需要包装在对象中
-    const payload = { books: books };
+    // 只同步书籍元数据，不同步文件数据
+    const booksForSync = books.map(book => {
+      const bookCopy = JSON.parse(JSON.stringify(book));
+      
+      // 如果 epub 是 base64 数据，替换为索引
+      if (bookCopy.epub && bookCopy.epub.startsWith('data:')) {
+        // 如果还有旧的 base64 数据，清除
+        bookCopy.epub = '';
+      }
+      
+      // 附件中移除数据，只保留引用
+      if (bookCopy.附件) {
+        bookCopy.附件 = bookCopy.附件.map(att => {
+          if (att.data) {
+            // 清除 base64 数据
+            return {
+              ...att,
+              data: undefined
+            };
+          }
+          return att;
+        });
+      }
+      
+      return bookCopy;
+    });
+    
+    const payload = { books: booksForSync };
     
     const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
       method: 'PUT',
@@ -50,21 +76,12 @@ async function loadFromCloud() {
     
     if (response.ok) {
       const data = await response.json();
-      // 从 record.books 中获取数据
       if (data.record && data.record.books && Array.isArray(data.record.books)) {
         books = data.record.books;
         localStorage.setItem("books", JSON.stringify(books));
         render();
         return true;
-      } else if (data.record && Array.isArray(data.record)) {
-        // 兼容旧格式
-        books = data.record;
-        localStorage.setItem("books", JSON.stringify(books));
-        render();
-        return true;
       }
-    } else {
-      console.warn("⚠️ 从云端加载失败，状态码:", response.status);
     }
   } catch (e) {
     console.warn("⚠️ 从云端加载失败", e);
@@ -74,8 +91,34 @@ async function loadFromCloud() {
 
 /* ========== 保存 ========== */
 function save() {
-  localStorage.setItem("books", JSON.stringify(books));
-  // 延迟同步，避免频繁请求
+  // 保存到 localStorage（只存元数据，文件在 IndexedDB）
+  const booksForStorage = books.map(book => {
+    const bookCopy = JSON.parse(JSON.stringify(book));
+    
+    // 如果 epub 是 base64 数据，清除（应该已经迁移到 IndexedDB）
+    if (bookCopy.epub && bookCopy.epub.startsWith('data:')) {
+      bookCopy.epub = '';
+    }
+    
+    // 附件中移除 data
+    if (bookCopy.附件) {
+      bookCopy.附件 = bookCopy.附件.map(att => {
+        if (att.data) {
+          return {
+            ...att,
+            data: undefined
+          };
+        }
+        return att;
+      });
+    }
+    
+    return bookCopy;
+  });
+  
+  localStorage.setItem("books", JSON.stringify(booksForStorage));
+  
+  // 延迟同步到云端
   clearTimeout(window._saveTimeout);
   window._saveTimeout = setTimeout(() => {
     saveToCloud();
@@ -167,17 +210,12 @@ function getFileExtension(filename) {
   return parts.length > 1 ? parts.pop().toLowerCase() : '';
 }
 
-function isSupportedFileType(ext) {
-  const supported = ['epub', 'txt', 'azw3', 'pdf', 'mobi', 'doc', 'docx'];
-  return supported.includes(ext);
-}
-
-function readFileAsBase64(file) {
+function readFileAsArrayBuffer(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
     reader.onerror = (err) => reject(err);
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(file);
   });
 }
 
@@ -199,8 +237,19 @@ function openDetail(index) {
     `<option value="${s}" ${currentBook.阅读状态 === s ? 'selected' : ''}>${s}</option>`
   ).join('');
 
-  // 生成附件列表HTML
   const attachmentsHtml = generateAttachmentsHtml(currentBook.附件 || []);
+
+  // 显示 EPUB 文件信息
+  let epubDisplay = '';
+  if (currentBook.epub) {
+    if (currentBook.epub.startsWith('indexeddb://')) {
+      epubDisplay = `<div class="file-item"><span class="file-name">📖 已存储 (IndexedDB)</span></div>`;
+    } else if (currentBook.epub.startsWith('http')) {
+      epubDisplay = `<div class="file-item"><span class="file-name">🔗 ${currentBook.epub.substring(0, 50)}...</span></div>`;
+    } else {
+      epubDisplay = `<div class="file-item"><span class="file-name">📖 已存储</span></div>`;
+    }
+  }
 
   c.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -244,7 +293,7 @@ function openDetail(index) {
 
     <hr>
 
-    <!-- 附件上传区域（支持多个文件） -->
+    <!-- 附件上传区域 -->
     <label>📎 附件</label>
     <div class="file-upload-area" id="attachmentArea">
       <div class="upload-options">
@@ -258,16 +307,17 @@ function openDetail(index) {
       </div>
     </div>
 
-    <!-- EPUB 文件（支持上传和链接） -->
+    <!-- EPUB 文件 -->
     <label>📱 EPUB 文件</label>
     <div class="file-upload-area">
       <div class="upload-options">
         <input type="file" accept=".epub" onchange="uploadEpubFile(event)" style="flex:1;">
-        <input type="text" id="epubLinkInput" value="${currentBook.epub || ''}" 
+        <input type="text" id="epubLinkInput" value="${currentBook.epub && !currentBook.epub.startsWith('indexeddb://') ? currentBook.epub : ''}" 
                placeholder="或输入EPUB链接" style="flex:2;" 
-               oninput="updateField('epub', this.value)">
+               oninput="updateEpubLink(this.value)">
+        <button onclick="clearEpubFile()" style="background:#e74c3c;">清除</button>
       </div>
-      ${currentBook.epub ? `<div class="file-item"><span class="file-name">📖 ${currentBook.epub.substring(0, 50)}${currentBook.epub.length > 50 ? '...' : ''}</span></div>` : ''}
+      ${epubDisplay}
     </div>
 
     <hr>
@@ -290,16 +340,50 @@ function openDetail(index) {
   d.classList.remove("hidden");
 }
 
+/* ========== 更新 EPUB 链接 ========== */
+function updateEpubLink(value) {
+  if (currentBook) {
+    currentBook.epub = value;
+    save();
+  }
+}
+
+/* ========== 清除 EPUB 文件 ========== */
+async function clearEpubFile() {
+  if (!currentBook) return;
+  
+  // 如果是 IndexedDB 存储的，删除
+  if (currentBook.epub && currentBook.epub.startsWith('indexeddb://')) {
+    const fileId = currentBook.epub.replace('indexeddb://', '');
+    try {
+      await deleteFileFromIndexedDB(fileId);
+      console.log('✅ 已删除 IndexedDB 中的 EPUB 文件');
+    } catch (e) {
+      console.warn('删除 IndexedDB 文件失败:', e);
+    }
+  }
+  
+  currentBook.epub = '';
+  save();
+  if (currentIndex >= 0) openDetail(currentIndex);
+}
+
 /* ========== 生成附件列表HTML ========== */
 function generateAttachmentsHtml(attachments) {
   if (!attachments || attachments.length === 0) return '<div style="color:#999;font-size:13px;padding:8px 0;">暂无附件</div>';
   
   return attachments.map((file, idx) => {
     const isLink = file.type === 'link';
-    const icon = isLink ? '🔗' : '📄';
+    const isStored = file.type === 'file' && file.fileId;
+    const icon = isLink ? '🔗' : (isStored ? '📄' : '📄');
     const name = isLink ? file.name : file.fileName;
     const size = isLink ? '' : formatFileSize(file.size);
     const ext = isLink ? '' : getFileExtension(name);
+    
+    let statusBadge = '';
+    if (isStored) {
+      statusBadge = `<span class="file-type-badge" style="background:#27ae60;">已存储</span>`;
+    }
     
     return `
       <div class="file-item">
@@ -307,6 +391,7 @@ function generateAttachmentsHtml(attachments) {
           <span>${icon}</span>
           <span class="file-name" title="${name}">${name}</span>
           ${ext ? `<span class="file-type-badge">${ext.toUpperCase()}</span>` : ''}
+          ${statusBadge}
           ${size ? `<span class="file-size">${size}</span>` : ''}
         </div>
         <button class="remove-file" onclick="removeAttachment(${idx})">✕</button>
@@ -315,7 +400,7 @@ function generateAttachmentsHtml(attachments) {
   }).join('');
 }
 
-/* ========== 上传附件（多个文件） ========== */
+/* ========== 上传附件 ========== */
 async function uploadAttachments(event) {
   const files = event.target.files;
   if (!files || files.length === 0 || !currentBook) return;
@@ -324,17 +409,34 @@ async function uploadAttachments(event) {
   
   for (const file of files) {
     try {
-      const base64 = await readFileAsBase64(file);
+      // 检查文件大小（建议限制在 50MB）
+      if (file.size > 50 * 1024 * 1024) {
+        alert(`文件 ${file.name} 超过50MB，请使用链接方式`);
+        continue;
+      }
+      
+      const arrayBuffer = await readFileAsArrayBuffer(file);
+      
+      // 保存到 IndexedDB
+      const fileId = await saveFileToIndexedDB(
+        currentBook.id,
+        'attachment',
+        file.name,
+        arrayBuffer,
+        { size: file.size, type: file.type }
+      );
+      
       currentBook.附件.push({
         type: 'file',
         fileName: file.name,
         size: file.size,
-        data: base64,
+        fileId: fileId,
         uploadDate: new Date().toISOString()
       });
+      
     } catch (e) {
-      console.error('读取文件失败:', e);
-      alert(`读取文件 ${file.name} 失败: ${e.message}`);
+      console.error('保存附件失败:', e);
+      alert(`保存附件 ${file.name} 失败: ${e.message}`);
     }
   }
   
@@ -356,7 +458,6 @@ function addAttachmentLink() {
   
   if (!currentBook.附件) currentBook.附件 = [];
   
-  // 从URL中提取文件名
   const fileName = url.split('/').pop() || '链接文件';
   
   currentBook.附件.push({
@@ -372,8 +473,21 @@ function addAttachmentLink() {
 }
 
 /* ========== 移除附件 ========== */
-function removeAttachment(index) {
+async function removeAttachment(index) {
   if (!currentBook.附件) return;
+  
+  const file = currentBook.附件[index];
+  
+  // 如果是存储的文件，从 IndexedDB 删除
+  if (file.type === 'file' && file.fileId) {
+    try {
+      await deleteFileFromIndexedDB(file.fileId);
+      console.log('✅ 已从 IndexedDB 删除附件');
+    } catch (e) {
+      console.warn('删除 IndexedDB 附件失败:', e);
+    }
+  }
+  
   currentBook.附件.splice(index, 1);
   save();
   if (currentIndex >= 0) openDetail(currentIndex);
@@ -385,13 +499,32 @@ async function uploadEpubFile(event) {
   if (!file || !currentBook) return;
   
   try {
-    const base64 = await readFileAsBase64(file);
-    currentBook.epub = base64;
+    // 检查文件大小
+    if (file.size > 100 * 1024 * 1024) {
+      alert('文件超过100MB，请使用链接方式');
+      event.target.value = '';
+      return;
+    }
+    
+    const arrayBuffer = await readFileAsArrayBuffer(file);
+    
+    // 保存到 IndexedDB
+    const fileId = await saveFileToIndexedDB(
+      currentBook.id,
+      'epub',
+      file.name,
+      arrayBuffer,
+      { size: file.size, type: file.type }
+    );
+    
+    currentBook.epub = `indexeddb://${fileId}`;
     save();
     if (currentIndex >= 0) openDetail(currentIndex);
+    
+    console.log(`✅ EPUB 已保存到 IndexedDB: ${file.name}`);
   } catch (e) {
-    console.error('读取EPUB文件失败:', e);
-    alert('读取EPUB文件失败: ' + e.message);
+    console.error('保存EPUB失败:', e);
+    alert('保存EPUB失败: ' + e.message);
   }
   
   event.target.value = '';
@@ -448,8 +581,16 @@ function closeDrawer() {
 }
 
 /* ========== 删除书籍 ========== */
-function deleteBook() {
+async function deleteBook() {
   if (!currentBook || !confirm(`确定要删除《${currentBook.书名}》吗？`)) return;
+
+  // 清理 IndexedDB 中的文件
+  try {
+    await clearFilesForBook(currentBook.id);
+    console.log('✅ 已清理 IndexedDB 文件');
+  } catch (e) {
+    console.warn('清理 IndexedDB 文件失败:', e);
+  }
 
   const index = books.findIndex(b => b.id === currentBook.id);
   if (index > -1) {
@@ -463,7 +604,7 @@ function deleteBook() {
 }
 
 /* ========== 阅读器 ========== */
-function openReader() {
+async function openReader() {
   if (!currentBook) return;
 
   let epubSource = currentBook.epub;
@@ -475,6 +616,7 @@ function openReader() {
       if (!url) return;
       currentBook.epub = url;
       epubSource = url;
+      save();
     } else {
       const input = document.createElement('input');
       input.type = 'file';
@@ -483,8 +625,15 @@ function openReader() {
         const file = e.target.files[0];
         if (!file) return;
         try {
-          const base64 = await readFileAsBase64(file);
-          currentBook.epub = base64;
+          const arrayBuffer = await readFileAsArrayBuffer(file);
+          const fileId = await saveFileToIndexedDB(
+            currentBook.id,
+            'epub',
+            file.name,
+            arrayBuffer,
+            { size: file.size, type: file.type }
+          );
+          currentBook.epub = `indexeddb://${fileId}`;
           save();
           openReader();
         } catch (err) {
@@ -494,7 +643,27 @@ function openReader() {
       input.click();
       return;
     }
-    save();
+  }
+  
+  // 如果是 IndexedDB 引用，加载数据
+  if (epubSource.startsWith('indexeddb://')) {
+    const fileId = epubSource.replace('indexeddb://', '');
+    try {
+      const fileData = await getFileFromIndexedDB(fileId);
+      if (fileData && fileData.data) {
+        // 创建 Blob URL
+        const blob = new Blob([fileData.data], { type: 'application/epub+zip' });
+        epubSource = URL.createObjectURL(blob);
+        console.log('✅ 从 IndexedDB 加载 EPUB');
+      } else {
+        alert('找不到 EPUB 文件数据');
+        return;
+      }
+    } catch (e) {
+      console.error('加载 EPUB 文件失败:', e);
+      alert('加载 EPUB 文件失败: ' + e.message);
+      return;
+    }
   }
 
   const reader = document.getElementById("reader");
@@ -543,8 +712,36 @@ function searchBooks() {
   });
 }
 
+/* ========== 显示存储信息 ========== */
+async function showStorageInfo() {
+  try {
+    const info = await getStorageInfo();
+    const message = `
+📊 IndexedDB 存储信息
+━━━━━━━━━━━━━━━━━━━
+📁 文件数量: ${info.count}
+💾 总大小: ${info.totalSizeFormatted}
+━━━━━━━━━━━━━━━━━━━
+📚 书籍数量: ${books.length}
+💾 localStorage: ${formatFileSize(new Blob([JSON.stringify(books)]).size)}
+    `;
+    alert(message);
+  } catch (e) {
+    console.error('获取存储信息失败:', e);
+    alert('获取存储信息失败');
+  }
+}
+
 /* ========== 初始化 ========== */
 async function init() {
+  // 初始化 IndexedDB
+  try {
+    await openDB();
+    console.log('✅ IndexedDB 初始化完成');
+  } catch (e) {
+    console.warn('IndexedDB 初始化失败:', e);
+  }
+  
   const loaded = await loadFromCloud();
   if (!loaded) {
     books = JSON.parse(localStorage.getItem("books") || "[]");
