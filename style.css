@@ -321,6 +321,14 @@ h1 {
   font-size: 1.4em;
   color: #dcb146;
 }
+
+p.xz{
+font-size:0.9em;
+  font-family:"kaiti","楷体";
+  line-height:1;
+  padding:0;
+  color:#615d53;
+}
 /* 文件上传区域样式 */
 .file-upload-area {
   border: 2px dashed #ddd;
