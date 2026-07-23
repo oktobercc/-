@@ -215,10 +215,10 @@ function switchView(view) {
   if (navMap[view] !== undefined) {
     navItems[navMap[view]].classList.add('active');
   }
-  const titles = { 'gallery': '📚 书墙', 'dashboard': '📊 仪表盘', 'calendar': '📅 日历' };
+  const titles = { 'gallery': '☁ 书墙', 'dashboard': '◵ 仪表盘', 'calendar': '☃ 日历' };
   const titleEl = document.getElementById('viewTitle');
   if (titleEl) {
-    titleEl.textContent = titles[view] || '📚 书墙';
+    titleEl.textContent = titles[view] || '☁ 书墙';
   }
 }
 
@@ -227,7 +227,7 @@ function toggleTheme() {
   document.body.classList.toggle('dark');
   const themeBtn = document.querySelector('.nav-footer .nav-item .nav-icon');
   if (themeBtn) {
-    themeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    themeBtn.textContent = document.body.classList.contains('dark') ? '☀' : '☾';
   }
 }
 
@@ -378,15 +378,15 @@ function openDetail(index) {
     ${createInput('开始日期', 'date')}
     ${createInput('结束日期', 'date')}
     ${createInput('评分', 'number', 0, 10)}
-    <label>📌 阅读状态</label>
+    <label>▷ 阅读状态</label>
     <select onchange="updateField('阅读状态',this.value)">${statusSelect}</select>
-    <label>🏷️ 标签（用逗号分隔）</label>
+    <label>❐ 标签（用逗号分隔）</label>
     <input value="${currentBook.标签 ? currentBook.标签.join(',') : ''}" oninput="updateTags(this.value)" placeholder="例如：科幻, 文学, 推理" />
-    <label>📖 简介</label>
+    <label>☂ 简介</label>
     <textarea oninput="updateField('简介',this.value)">${currentBook.简介 || ''}</textarea>
-    <label>✍️ 书评</label>
+    <label>ღ 书评</label>
     <textarea oninput="updateField('书评',this.value)">${currentBook.书评 || ''}</textarea>
-    <label>📝 书摘</label>
+    <label>✎ 书摘</label>
     <textarea oninput="updateField('书摘',this.value)">${currentBook.书摘 || ''}</textarea>
     <hr>
     <label>📎 附件（支持 EPUB、TXT、PDF、MOBI、AZW3 等）</label>
@@ -400,10 +400,10 @@ function openDetail(index) {
       <div id="attachmentList">${attachmentsHtml}</div>
     </div>
     <hr>
-    <div class="info-row"><span>📊 阅读进度</span><span>${currentBook.阅读进度 || 0}%</span></div>
-    <div class="info-row"><span>⏱️ 阅读时长</span><span>${Math.floor((currentBook.阅读时长 || 0) / 60)} 分钟</span></div>
+    <div class="info-row"><span>⇄ 阅读进度</span><span>${currentBook.阅读进度 || 0}%</span></div>
+    <div class="info-row"><span>⌚️ 阅读时长</span><span>${Math.floor((currentBook.阅读时长 || 0) / 60)} 分钟</span></div>
     <div class="btn-group">
-      <button class="btn-primary" onclick="openReader()">📖 阅读</button>
+      <button class="btn-primary" onclick="openReader()">♨ 阅读</button>
       <button class="btn-danger" onclick="deleteBook()">🗑 删除</button>
     </div>
   `;
