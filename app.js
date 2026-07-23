@@ -1,6 +1,6 @@
 // 在文件顶部添加配置
-const API_KEY = 'your_jsonbin_api_key'; // 从 https://jsonbin.io 获取
-const BIN_ID = 'your_bin_id'; // 创建 bin 后获取
+const API_KEY = '$2a$10$Lyu0JADHUoRZmaoAHQw3COrvXZ.Em2DT4Hl/SJZ1KI3jVq3tvpDBW'; // 从 https://jsonbin.io 获取
+const BIN_ID = '6a625757f5f4af5e29b792c9'; // 创建 bin 后获取
 
 // 修改保存函数 - 同时保存到本地和云端
 async function save() {
