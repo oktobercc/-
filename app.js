@@ -166,4 +166,16 @@ function searchBooks(){
   });
 }
 
+function uploadCover(e){
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(){
+    currentBook.封面 = reader.result; // base64
+    save();
+    render();
+  };
+
+  reader.readAsDataURL(file);
+}
 render();
