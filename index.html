@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reading OS</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ePub.js -->
+  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="logo">📚 Reading OS</div>
+
+  <input id="search" placeholder="搜索书名 / 标签..." />
+
+  <div class="actions">
+    <button id="addBtn">＋</button>
+    <button id="toggleTheme">🌙</button>
+  </div>
+</header>
+
+<main id="grid"></main>
+
+<!-- 详情抽屉 -->
+<div id="drawer" class="drawer hidden">
+  <div class="drawer-content">
+    <span id="closeDrawer">✕</span>
+
+    <div id="detail"></div>
+
+    <!-- 阅读器 -->
+    <div id="readerSection">
+      <input type="file" id="uploadEpub" accept=".epub"/>
+      <button id="startRead">开始阅读</button>
+
+      <div id="reader"></div>
+
+      <div class="reader-controls">
+        <button onclick="prevPage()">←</button>
+        <button onclick="nextPage()">→</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
