@@ -46,9 +46,9 @@ function render() {
     div.className = "card";
 
     div.innerHTML = `
-      <img src="${b.封面 || 'https://via.placeholder.com/150'}">
+  <img src="${b.封面 || 'https://via.placeholder.com/150'}">
       <p>${b.书名}</p>
-    `;
+`;
 
     div.onclick = ()=>openDetail(i);
     gallery.appendChild(div);
@@ -98,7 +98,9 @@ function openDetail(index){
 
     <button onclick="openReader()">📖 阅读</button>
   `;
-
+    <button onclick="deleteBook(${currentBook.id})" style="color:red">
+  🗑 删除这本书
+</button>
   d.classList.remove("hidden");
 }
 
