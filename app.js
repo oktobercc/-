@@ -1,5 +1,5 @@
 // ===== app.js =====
-// 完整应用逻辑，无演示数据，所有书籍存储在 localStorage / IndexedDB
+// 完整应用逻辑，无演示数据
 
 // 常量
 const API_KEY = '$2a$10$1jLLuxJHp1ItkhyjiSobF.OXWtupctQqBui80XdP.f.DfkuQ7uQzu';
@@ -22,6 +22,40 @@ const reader = $('reader');
 const viewer = $('viewer');
 const searchInput = $('search');
 const viewTitle = $('viewTitle');
+
+// ========== 导航切换 ==========
+function switchView(viewName) {
+  // 隐藏所有视图
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  // 显示目标视图
+  const targetView = document.getElementById(viewName);
+  if (targetView) targetView.classList.add('active');
+  
+  // 更新导航高亮
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(item => {
+    if (item.dataset.view === viewName) {
+      item.classList.add('active');
+    }
+  });
+  
+  // 更新标题
+  const titles = {
+    'gallery': '书架',
+    'dashboard': '仪表盘',
+    'calendar': '日历'
+  };
+  if (viewTitle) viewTitle.textContent = titles[viewName] || '书架';
+}
+
+// ========== 主题切换 ==========
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const themeIcon = document.querySelector('#themeToggle .nav-icon');
+  if (themeIcon) {
+    themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '☪';
+  }
+}
 
 // ========== 云端同步 ==========
 async function saveToCloud() {
@@ -135,6 +169,36 @@ function readFileAsArrayBuffer(file) {
   });
 }
 
+// ========== 添加书籍 ==========
+function addBook() {
+  const newBook = {
+    id: Date.now(),
+    书名: '新书',
+    网址: '',
+    封面: '',
+    作者: '',
+    字数: '',
+    来源: '',
+    作品类型: '',
+    标签: [],
+    简介: '',
+    开始日期: '',
+    结束日期: '',
+    评分: 0,
+    阅读时长: 0,
+    阅读进度: 0,
+    阅读状态: '未读',
+    书评: '',
+    书摘: '',
+    附件: [],
+    epub: ''
+  };
+  books.push(newBook);
+  save();
+  render();
+  openDetail(books.length - 1);
+}
+
 // ========== 打开详情 ==========
 function openDetail(index) {
   if (index < 0 || index >= books.length) return;
@@ -223,47 +287,4 @@ function generateAttachmentsHtml(attachments) {
         <div class="file-info">
           <span>${icon}</span>
           <span class="file-name" title="${name}">${name}</span>
-          ${ext ? `<span class="file-type-badge">${ext.toUpperCase()}</span>` : ''}
-          ${epubBadge}${storedBadge}
-          ${size ? `<span class="file-size">${size}</span>` : ''}
-        </div>
-        <div style="display:flex;gap:4px;">
-          ${isEpub && isStored ? `<button class="read-file-btn" onclick="readAttachment(${idx})">📖</button>` : ''}
-          <button class="remove-file" onclick="removeAttachment(${idx})">✕</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-// ========== 字段更新 ==========
-function updateField(field, value) {
-  if (currentBook) { currentBook[field] = value; save(); }
-}
-function updateTags(val) {
-  if (currentBook) { currentBook.标签 = val.split(',').map(t=>t.trim()).filter(Boolean); save(); }
-}
-
-// ========== 封面上传 ==========
-function uploadCover(e) {
-  const file = e.target.files[0];
-  if (!file || !currentBook) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    currentBook.封面 = ev.target.result;
-    save();
-    if (currentIndex >= 0) openDetail(currentIndex);
-  };
-  reader.readAsDataURL(file);
-}
-
-// ========== 附件操作 ==========
-async function uploadAttachments(event) {
-  const files = event.target.files;
-  if (!files?.length || !currentBook) return;
-  if (!currentBook.附件) currentBook.附件 = [];
-  let completed = 0;
-  for (const file of files) {
-    try {
-      const arrayBuffer = await readFileAsArrayBuffer(file);
-      const fileId = await saveFileToIndexedDB(currentBook.id, 'attachment', file.name, arrayBuffer, { size: file.size, type: file
+          ${ext ? `<span class="file-type-badge
