@@ -215,7 +215,7 @@ body {
   display: block;
 }
 
-/* ========== 书籍网格 - 真正变宽且居中 ========== */
+/* ========== 书籍网格 ========== */
 .books-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
