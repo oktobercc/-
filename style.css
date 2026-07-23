@@ -1,99 +1,102 @@
-:root {
-  --bg: #ffffff;
-  --text: #111;
-  --card: #f7f7f7;
-}
-
-body.dark {
-  --bg: #1e1e1e;
-  --text: #eee;
-  --card: #2a2a2a;
-}
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont;
-  background: var(--bg);
-  color: var(--text);
+  display: flex;
+  height: 100vh;
 }
 
-/* 顶栏 */
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #f7f7f5;
+  padding: 20px;
+}
+
+.sidebar button {
+  display: block;
+  margin: 10px 0;
+  width: 100%;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Topbar */
 .topbar {
   display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  position: sticky;
-  top: 0;
-  background: var(--bg);
-  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  gap: 10px;
 }
 
-.logo {
-  font-weight: bold;
+/* Views */
+.view {
+  display: none;
+  padding: 20px;
 }
 
-.topbar input {
-  flex: 1;
-  margin: 0 20px;
-  padding: 8px;
+.view.active {
+  display: block;
 }
 
-.actions button {
-  margin-left: 10px;
-}
-
-/* IG 卡片流 */
-#grid {
-  column-count: 4;
-  column-gap: 12px;
-  padding: 12px;
+/* Gallery */
+#gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 140px);
+  gap: 20px;
 }
 
 .card {
-  background: var(--card);
-  margin-bottom: 12px;
-  border-radius: 12px;
-  overflow: hidden;
   cursor: pointer;
 }
 
 .card img {
   width: 100%;
+  border-radius: 10px;
 }
 
-.card .info {
-  padding: 8px;
-}
-
-/* 抽屉 */
+/* Drawer */
 .drawer {
   position: fixed;
-  top: 0;
   right: 0;
-  width: 50%;
+  width: 400px;
   height: 100%;
-  background: var(--bg);
-  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  background: white;
+  border-left: 1px solid #ddd;
+  overflow: auto;
 }
 
 .hidden {
   display: none;
 }
 
-.drawer-content {
-  padding: 20px;
-  overflow-y: auto;
-  height: 100%;
+/* Reader */
+.reader {
+  position: fixed;
+  inset: 0;
+  background: white;
 }
 
-/* 阅读器 */
-#reader {
-  height: 400px;
-  border: 1px solid #ccc;
-  margin-top: 10px;
+.reader-bar {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
-.reader-controls {
-  text-align: center;
-  margin-top: 10px;
+#viewer {
+  height: calc(100% - 50px);
+}
+
+/* Dark mode */
+body.dark {
+  background: #1e1e1e;
+  color: white;
+}
+
+h1{
+  font-family:"songti";"宋体";
+  font-size:1.2em;
+  color:#dcb146;
 }
