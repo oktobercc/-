@@ -118,6 +118,11 @@ function update(field,value){
   save();
 }
 
+function save() {
+  localStorage.setItem("books", JSON.stringify(books));
+  console.log("已保存");
+}
+
 /* 标签 */
 function updateTags(val){
   currentBook.标签 = val.split(",");
@@ -178,4 +183,18 @@ function uploadCover(e){
 
   reader.readAsDataURL(file);
 }
+
+/*删除书籍*/
+function deleteBook(id){
+  if(!confirm("确定删除这本书吗？")) return;
+
+  books = books.filter(b => b.id !== id);
+
+  save();
+  render();
+
+  // 如果详情页开着，关闭
+  document.getElementById("drawer").classList.add("hidden");
+}
+
 render();
