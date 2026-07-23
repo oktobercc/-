@@ -1,8 +1,7 @@
-// 在文件顶部添加配置
-const API_KEY = '$2a$10$Lyu0JADHUoRZmaoAHQw3COrvXZ.Em2DT4Hl/SJZ1KI3jVq3tvpDBW'; // 从 https://jsonbin.io 获取
-const BIN_ID = '6a625757f5f4af5e29b792c9'; // 创建 bin 后获取
+const API_KEY = '$2a$10$1jLLuxJHp1ItkhyjiSobF.OXWtupctQqBui80XdP.f.DfkuQ7uQzu'; // 从 API Keys 页面获取
+const BIN_ID = '6a625757f5f4af5e29b792c9'; // 从创建后的地址或详情页获取
 
-// 修改保存函数 - 同时保存到本地和云端
+// 修改保存函数
 async function save() {
   // 保存到本地
   localStorage.setItem("books", JSON.stringify(books));
@@ -10,21 +9,26 @@ async function save() {
   
   // 同步到云端
   try {
-    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY
+        'X-Master-Key': API_KEY // 使用你的 Master Key
       },
-      body: JSON.stringify({ books: books })
+      body: JSON.stringify(books) // 直接发送书籍数据
     });
-    console.log("已同步到云端");
+    
+    if (response.ok) {
+      console.log("已同步到云端");
+    } else {
+      console.warn("云端同步失败，状态码:", response.status);
+    }
   } catch (e) {
-    console.warn("云端同步失败，数据保存在本地", e);
+    console.warn("云端同步失败", e);
   }
 }
 
-// 修改加载逻辑 - 从云端加载
+// 修改加载函数
 async function loadFromCloud() {
   try {
     const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
@@ -32,12 +36,16 @@ async function loadFromCloud() {
         'X-Master-Key': API_KEY
       }
     });
-    const data = await response.json();
-    if (data.record && data.record.books) {
-      books = data.record.books;
-      localStorage.setItem("books", JSON.stringify(books));
-      render();
-      return true;
+    
+    if (response.ok) {
+      const data = await response.json();
+      // JSONBin 返回的数据在 record 字段中
+      if (data.record && Array.isArray(data.record)) {
+        books = data.record;
+        localStorage.setItem("books", JSON.stringify(books));
+        render();
+        return true;
+      }
     }
   } catch (e) {
     console.warn("从云端加载失败", e);
@@ -45,19 +53,18 @@ async function loadFromCloud() {
   return false;
 }
 
-// 修改初始化
+// 修改初始化函数
 async function init() {
-  // 先尝试从云端加载
   const loaded = await loadFromCloud();
   if (!loaded) {
-    // 如果云端加载失败，从本地加载
     books = JSON.parse(localStorage.getItem("books") || "[]");
+    render();
   }
-  render();
 }
 
-// 将页面加载时的 init 改为：
-// render(); 替换为 init();
+// 将页面加载的 render() 改为 init()
+// render(); // 注释掉这行
+// init();  // 添加这行
 
 let books = JSON.parse(localStorage.getItem("books") || "[]");
 let currentBook = null;
