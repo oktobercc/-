@@ -222,12 +222,12 @@ body {
 }
 
 .add-btn {
-  background: #dcb146;
-  color: white;
+border:2px solid #fff;
+  color: #fff;
 }
 
 .add-btn:hover {
-  background: #c49a3a;
+  background: d2d2d2;
   transform: scale(1.02);
 }
 
