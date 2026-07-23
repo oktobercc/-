@@ -1,3 +1,64 @@
+// 在文件顶部添加配置
+const API_KEY = 'your_jsonbin_api_key'; // 从 https://jsonbin.io 获取
+const BIN_ID = 'your_bin_id'; // 创建 bin 后获取
+
+// 修改保存函数 - 同时保存到本地和云端
+async function save() {
+  // 保存到本地
+  localStorage.setItem("books", JSON.stringify(books));
+  console.log("已保存到本地");
+  
+  // 同步到云端
+  try {
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY
+      },
+      body: JSON.stringify({ books: books })
+    });
+    console.log("已同步到云端");
+  } catch (e) {
+    console.warn("云端同步失败，数据保存在本地", e);
+  }
+}
+
+// 修改加载逻辑 - 从云端加载
+async function loadFromCloud() {
+  try {
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      headers: {
+        'X-Master-Key': API_KEY
+      }
+    });
+    const data = await response.json();
+    if (data.record && data.record.books) {
+      books = data.record.books;
+      localStorage.setItem("books", JSON.stringify(books));
+      render();
+      return true;
+    }
+  } catch (e) {
+    console.warn("从云端加载失败", e);
+  }
+  return false;
+}
+
+// 修改初始化
+async function init() {
+  // 先尝试从云端加载
+  const loaded = await loadFromCloud();
+  if (!loaded) {
+    // 如果云端加载失败，从本地加载
+    books = JSON.parse(localStorage.getItem("books") || "[]");
+  }
+  render();
+}
+
+// 将页面加载时的 init 改为：
+// render(); 替换为 init();
+
 let books = JSON.parse(localStorage.getItem("books") || "[]");
 let currentBook = null;
 let currentIndex = -1;
