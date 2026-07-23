@@ -322,13 +322,14 @@ h1 {
   color: #dcb146;
 }
 
-p.xz{
-font-size:0.9em;
-  font-family:"kaiti","楷体";
-  line-height:1;
-  padding:0;
-  color:#615d53;
+p.xz {
+  font-size: 0.7em;
+  font-family: "楷体", "KaiTi", "华文楷体", "STKaiti", "AR PL UKai CN", "AR PL UKai HK", "AR PL UKai TW", serif;
+  line-height: 1.5;
+  padding: 0;
+  color: #615d53;
 }
+
 /* 文件上传区域样式 */
 .file-upload-area {
   border: 2px dashed #ddd;
