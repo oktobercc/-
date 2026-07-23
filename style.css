@@ -104,9 +104,9 @@ body {
 }
 
 .nav-item .nav-icon {
-  font-size: 24px;
+  font-size: 1.3em;
   flex-shrink: 0;
-  width: 24px;
+  width: 1.3em;
   text-align: center;
 }
 
