@@ -1,3 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading OS</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+</head>
+<body class="light">
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h1>页间集</h1>
+  <button onclick="switchView('gallery')">☃书墙</button>
+  <button onclick="switchView('dashboard')">☢仪表盘</button>
+  <button onclick="switchView('calendar')">㏘日历</button>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <!-- Topbar -->
+  <div class="topbar">
+    <input type="text" id="search" placeholder="搜索书名 / 标签..." oninput="searchBooks()">
+    <button onclick="toggleTheme()">🌙</button>
+    <button onclick="addBook()">＋ 添加</button>
+  </div>
+
+  <!-- Views -->
+  <div id="gallery" class="view active"></div>
+  <div id="dashboard" class="view"></div>
+  <div id="calendar" class="view"></div>
+</div>
+
+<!-- Drawer -->
+<div id="drawer" class="drawer hidden">
+  <div class="drawer-content" id="drawerContent"></div>
+</div>
+
+<!-- Reader -->
+<div id="reader" class="reader hidden">
+  <div class="reader-bar">
+    <button onclick="closeReader()">← 返回</button>
+    <button onclick="toggleTheme()">🌙</button>
+  </div>
+  <div id="viewer"></div>
+</div>
+
 /* 文件上传区域样式 */
 .file-upload-area {
   border: 2px dashed #ddd;
@@ -117,3 +165,7 @@ body.dark .file-upload-area.dragover {
   border-color: #dcb146;
   background: rgba(220, 177, 70, 0.1);
 }
+
+<script src="app.js"></script>
+</body>
+</html>
