@@ -268,7 +268,7 @@ function render() {
   if (!grid) return;
   grid.innerHTML = "";
   if (!books || books.length === 0) {
-    grid.innerHTML = '<p style="color:#999;text-align:center;grid-column:1/-1;padding:60px 0;font-size:16px;">📚 还没有书籍，点击右上角"＋ 添加"开始吧</p>';
+    grid.innerHTML = '<p style="color:#999;text-align:center;grid-column:1/-1;padding:60px 0;font-size:16px;">还没有书籍，点击右上角"＋ 添加"开始吧</p>';
     return;
   }
   books.forEach((b, i) => {
