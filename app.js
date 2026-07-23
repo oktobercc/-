@@ -7,26 +7,36 @@ let currentBook = null;
 let currentIndex = -1;
 let startTime = null;
 let rendition;
+let isSyncing = false; // 防止并发同步
 
 /* ========== 云端同步 ========== */
 async function saveToCloud() {
+  if (isSyncing) return;
+  isSyncing = true;
+  
   try {
+    // 注意：JSONBin 需要包装在对象中
+    const payload = { books: books };
+    
     const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'X-Master-Key': API_KEY
       },
-      body: JSON.stringify(books)
+      body: JSON.stringify(payload)
     });
     
     if (response.ok) {
       console.log("✅ 已同步到云端");
     } else {
-      console.warn("⚠️ 云端同步失败，状态码:", response.status);
+      const errorData = await response.json();
+      console.warn("⚠️ 云端同步失败，状态码:", response.status, errorData);
     }
   } catch (e) {
     console.warn("⚠️ 云端同步失败", e);
+  } finally {
+    isSyncing = false;
   }
 }
 
@@ -40,12 +50,21 @@ async function loadFromCloud() {
     
     if (response.ok) {
       const data = await response.json();
-      if (data.record && Array.isArray(data.record)) {
+      // 从 record.books 中获取数据
+      if (data.record && data.record.books && Array.isArray(data.record.books)) {
+        books = data.record.books;
+        localStorage.setItem("books", JSON.stringify(books));
+        render();
+        return true;
+      } else if (data.record && Array.isArray(data.record)) {
+        // 兼容旧格式
         books = data.record;
         localStorage.setItem("books", JSON.stringify(books));
         render();
         return true;
       }
+    } else {
+      console.warn("⚠️ 从云端加载失败，状态码:", response.status);
     }
   } catch (e) {
     console.warn("⚠️ 从云端加载失败", e);
@@ -56,7 +75,11 @@ async function loadFromCloud() {
 /* ========== 保存 ========== */
 function save() {
   localStorage.setItem("books", JSON.stringify(books));
-  saveToCloud(); // 异步同步到云端
+  // 延迟同步，避免频繁请求
+  clearTimeout(window._saveTimeout);
+  window._saveTimeout = setTimeout(() => {
+    saveToCloud();
+  }, 500);
 }
 
 /* ========== 视图切换 ========== */
@@ -91,8 +114,8 @@ function addBook() {
     阅读状态: "未读",
     书评: "",
     书摘: "",
-    附件: [], // 改为数组，存储多个文件
-    epub: "" // 保留单个EPUB链接，但增加文件上传支持
+    附件: [],
+    epub: ""
   };
   
   books.push(newBook);
@@ -106,7 +129,13 @@ function addBook() {
 /* ========== 渲染卡片 ========== */
 function render() {
   const gallery = document.getElementById("gallery");
+  if (!gallery) return;
   gallery.innerHTML = "";
+
+  if (!books || books.length === 0) {
+    gallery.innerHTML = '<p style="color:#999;text-align:center;grid-column:1/-1;padding:40px 0;">📚 还没有书籍，点击右上角"＋ 添加"开始吧</p>';
+    return;
+  }
 
   books.forEach((b, i) => {
     const div = document.createElement("div");
@@ -115,7 +144,7 @@ function render() {
     const coverImg = b.封面 || 'https://via.placeholder.com/150x200?text=No+Cover';
     
     div.innerHTML = `
-      <img src="${coverImg}" alt="${b.书名}">
+      <img src="${coverImg}" alt="${b.书名 || '未命名'}">
       <p>${b.书名 || '未命名'}</p>
     `;
 
@@ -126,13 +155,16 @@ function render() {
 
 /* ========== 文件处理工具函数 ========== */
 function formatFileSize(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
   if (bytes < 1024) return bytes + ' B';
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
 function getFileExtension(filename) {
-  return filename.split('.').pop().toLowerCase();
+  if (!filename) return '';
+  const parts = filename.split('.');
+  return parts.length > 1 ? parts.pop().toLowerCase() : '';
 }
 
 function isSupportedFileType(ext) {
@@ -144,13 +176,18 @@ function readFileAsBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
+    reader.onerror = (err) => reject(err);
     reader.readAsDataURL(file);
   });
 }
 
 /* ========== 打开详情 ========== */
 function openDetail(index) {
+  if (index < 0 || index >= books.length) {
+    console.error('索引超出范围');
+    return;
+  }
+  
   currentIndex = index;
   currentBook = books[index];
   
@@ -193,7 +230,7 @@ function openDetail(index) {
     </select>
 
     <label>🏷️ 标签（用逗号分隔）</label>
-    <input value="${currentBook.标签.join(',')}" 
+    <input value="${currentBook.标签 ? currentBook.标签.join(',') : ''}" 
       oninput="updateTags(this.value)" placeholder="例如：科幻, 文学, 推理" />
 
     <label>📖 简介</label>
@@ -230,7 +267,7 @@ function openDetail(index) {
                placeholder="或输入EPUB链接" style="flex:2;" 
                oninput="updateField('epub', this.value)">
       </div>
-      ${currentBook.epub ? `<div class="file-item"><span class="file-name">📖 ${currentBook.epub}</span></div>` : ''}
+      ${currentBook.epub ? `<div class="file-item"><span class="file-name">📖 ${currentBook.epub.substring(0, 50)}${currentBook.epub.length > 50 ? '...' : ''}</span></div>` : ''}
     </div>
 
     <hr>
@@ -302,7 +339,6 @@ async function uploadAttachments(event) {
   }
   
   save();
-  render();
   if (currentIndex >= 0) openDetail(currentIndex);
   event.target.value = '';
 }
@@ -310,6 +346,8 @@ async function uploadAttachments(event) {
 /* ========== 添加附件链接 ========== */
 function addAttachmentLink() {
   const input = document.getElementById('attachmentLinkInput');
+  if (!input) return;
+  
   const url = input.value.trim();
   if (!url) {
     alert('请输入链接地址');
@@ -329,7 +367,6 @@ function addAttachmentLink() {
   });
   
   save();
-  render();
   if (currentIndex >= 0) openDetail(currentIndex);
   input.value = '';
 }
@@ -339,7 +376,6 @@ function removeAttachment(index) {
   if (!currentBook.附件) return;
   currentBook.附件.splice(index, 1);
   save();
-  render();
   if (currentIndex >= 0) openDetail(currentIndex);
 }
 
@@ -350,7 +386,6 @@ async function uploadEpubFile(event) {
   
   try {
     const base64 = await readFileAsBase64(file);
-    // 保存为数据URL
     currentBook.epub = base64;
     save();
     if (currentIndex >= 0) openDetail(currentIndex);
@@ -400,7 +435,6 @@ function uploadCover(e) {
   reader.onload = function(event) {
     currentBook.封面 = event.target.result;
     save();
-    render();
     if (currentIndex >= 0) {
       openDetail(currentIndex);
     }
@@ -442,7 +476,6 @@ function openReader() {
       currentBook.epub = url;
       epubSource = url;
     } else {
-      // 创建隐藏的文件输入
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.epub';
@@ -453,7 +486,7 @@ function openReader() {
           const base64 = await readFileAsBase64(file);
           currentBook.epub = base64;
           save();
-          openReader(); // 重新打开
+          openReader();
         } catch (err) {
           alert('读取EPUB文件失败');
         }
