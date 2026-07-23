@@ -1,5 +1,5 @@
 // ===== app.js =====
-// 完整应用逻辑，无演示数据
+// 完整应用逻辑
 
 // 常量
 const API_KEY = '$2a$10$1jLLuxJHp1ItkhyjiSobF.OXWtupctQqBui80XdP.f.DfkuQ7uQzu';
@@ -207,6 +207,7 @@ function openDetail(index) {
   drawer.classList.remove('hidden');
 }
 
+// ========== 构建详情HTML ==========
 function buildDetailHTML(book) {
   const statusOptions = ['未读', '在读', '已读', '弃读'];
   const statusSelect = statusOptions.map(s =>
@@ -269,6 +270,7 @@ function createInput(field, type = 'text', min = null, max = null) {
   return `<label>${field}</label><input type="${type}" value="${val}" oninput="updateField('${field}',this.value)"${minAttr}${maxAttr} />`;
 }
 
+// ========== 生成附件HTML ==========
 function generateAttachmentsHtml(attachments) {
   if (!attachments || !attachments.length) return '<div style="color:#999;font-size:13px;padding:8px 0;">暂无附件</div>';
   return attachments.map((file, idx) => {
@@ -286,6 +288,4 @@ function generateAttachmentsHtml(attachments) {
         <div class="file-info">
           <span>${icon}</span>
           <span class="file-name" title="${name}">${name}</span>
-          ${ext ? `<span class="file-type-badge">${ext.toUpperCase()}</span>` : ''}
-          ${epubBadge}
-          ${storedBadge
+          ${ext ? `<span class="file-type-badge">${ext.toUpperCase()}</
