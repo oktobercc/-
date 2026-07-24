@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+
+
+<title>
+页间集
+</title>
+
+
+
+<!-- 全局 -->
+
+<link rel="stylesheet"
+href="css/main.css">
+
+
+
+<!-- 侧边栏 -->
+
+<link rel="stylesheet"
+href="css/sidebar.css">
+
+
+
+<!-- 书架 -->
+
+<link rel="stylesheet"
+href="css/bookshelf.css">
+
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+
+</head>
+
+
+
+
+
+<body>
+
+
+
+
+
+
+<!-- ===============================
+     侧边栏
+================================ -->
+
+
+<aside class="sidebar">
+
+
+
+    <div class="logo">
+
+
+        📚 Reading OS
+
+
+    </div>
+
+
+
+
+
+
+
+    <nav class="menu">
+
+
+
+        <button class="menu-item active">
+
+
+            🏠 我的书架
+
+
+        </button>
+
+
+
+
+
+        <button class="menu-item">
+
+
+            ⭐ 收藏
+
+
+        </button>
+
+
+
+
+
+        <button class="menu-item">
+
+
+            🕒 最近阅读
+
+
+        </button>
+
+
+
+
+
+        <button class="menu-item">
+
+
+            📝 我的笔记
+
+
+        </button>
+
+
+
+    </nav>
+
+
+
+
+
+
+
+    <div class="sidebar-bottom">
+
+
+        <button
+
+        class="menu-item"
+
+        onclick="toggleTheme()">
+
+
+
+            🌙 夜间模式
+
+
+
+        </button>
+
+
+
+    </div>
+
+
+
+</aside>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+     主区域
+================================ -->
+
+
+<main class="main">
+
+
+
+
+
+<header class="main-header">
+
+
+
+    <div>
+
+
+
+        <h1>
+
+            我的书架
+
+        </h1>
+
+
+
+        <p>
+
+
+            共
+
+            <span id="book-count">
+
+                0
+
+            </span>
+
+            本书
+
+
+        </p>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <div class="header-actions">
+
+
+
+        <!-- 搜索 -->
+
+
+        <input
+
+        class="search-box"
+
+        type="text"
+
+        placeholder="搜索书名或作者..."
+
+        oninput="searchBooks(this.value)">
+
+
+
+
+
+
+        <!-- 添加 -->
+
+
+        <button
+
+        class="add-button"
+
+        onclick="importBook()">
+
+
+
+            ＋ 添加书籍
+
+
+
+        </button>
+
+
+
+
+    </div>
+
+
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+     书架区域
+================================ -->
+
+
+<section
+
+class="bookshelf-container">
+
+
+
+    <div
+
+    id="bookshelf"
+
+    class="bookshelf">
+
+
+
+
+
+        <!-- JS生成书籍 -->
+
+
+
+    </div>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+     JS
+================================ -->
+
+
+<script src="js/storage.js"></script>
+
+
+<script src="js/import.js"></script>
+
+
+<script src="js/app.js"></script>
+
+
+
+</body>
+
+
+
+</html>

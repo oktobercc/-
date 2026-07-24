@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>
+Reading OS - 阅读
+</title>
+
+
+
+<!-- 全局样式 -->
+
+<link rel="stylesheet" href="css/main.css">
+
+
+<!-- 阅读器样式 -->
+
+<link rel="stylesheet" href="css/reader.css">
+
+
+
+</head>
+
+
+
+<body class="reader-page">
+
+
+
+<!-- ===============================
+     顶部工具栏
+================================ -->
+
+
+<header class="reader-toolbar">
+
+
+    <div class="toolbar-left">
+
+
+        <button
+        class="reader-btn"
+        onclick="closeReader()">
+
+            ←
+
+        </button>
+
+
+
+        <span
+        class="reader-book-title"
+        id="reader-title">
+
+            正在加载...
+
+        </span>
+
+
+    </div>
+
+
+
+
+
+    <div class="toolbar-right">
+
+
+        <button
+        class="reader-btn"
+        onclick="decreaseFont()">
+
+            A-
+
+        </button>
+
+
+
+        <button
+        class="reader-btn"
+        onclick="increaseFont()">
+
+            A+
+
+        </button>
+
+
+
+
+        <button
+        class="reader-btn"
+        onclick="darkMode()">
+
+            ☾
+
+        </button>
+
+
+
+
+        <button
+        class="reader-btn"
+        onclick="fullScreen()">
+
+            ⛶
+
+        </button>
+
+
+    </div>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+     阅读主体
+================================ -->
+
+
+<main class="reader-main">
+
+
+
+    <!-- 上一页 -->
+
+
+    <button
+
+    class="page-button left"
+
+    onclick="prevPage()">
+
+        ‹
+
+    </button>
+
+
+
+
+
+    <!-- 阅读显示区域 -->
+
+
+    <div
+
+    id="reader"
+
+    class="reader-content">
+
+
+        <div class="loading">
+
+
+            正在打开书籍...
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- 下一页 -->
+
+
+    <button
+
+    class="page-button right"
+
+    onclick="nextPage()">
+
+        ›
+
+    </button>
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+     底部进度栏
+================================ -->
+
+
+<footer class="reader-footer">
+
+
+    <div class="progress-container">
+
+
+        <div
+
+        class="reader-progress"
+
+        id="reader-progress">
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <div class="reader-info">
+
+
+        <span id="reading-progress-text">
+
+            0%
+
+        </span>
+
+
+    </div>
+
+
+
+</footer>
+
+
+
+
+
+
+
+
+
+<!-- epub.js -->
+
+<script
+
+src="https://unpkg.com/epubjs/dist/epub.min.js">
+
+</script>
+
+
+
+
+
+<!-- 数据存储 -->
+
+<script src="js/storage.js"></script>
+
+
+
+
+
+<!-- 阅读逻辑 -->
+
+<script src="js/reader.js"></script>
+
+
+
+</body>
+
+
+</html>
