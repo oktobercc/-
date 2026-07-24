@@ -27,8 +27,8 @@
 
         <!-- Logo -->
         <div class="sidebar-header">
-            <span class="logo-icon"><img src="assets/images/logo.png" alt=""/></span>
-           
+            <span class="logo-icon">📚</span>
+            <span class="logo-text">页间集</span>
         </div>
 
         <!-- 导航菜单 -->
@@ -36,33 +36,33 @@
 
             <!-- 书库 -->
             <div class="nav-item active" data-view="library">
-                <span class="nav-icon">▥</span>
+                <span class="nav-icon">📚</span>
                 <span class="nav-text">书库</span>
                 <span class="nav-badge" id="nav-badge">0</span>
             </div>
 
             <!-- 统计（含子菜单） -->
             <div class="nav-item has-sub" data-view="stats">
-                <span class="nav-icon">☑</span>
+                <span class="nav-icon">📊</span>
                 <span class="nav-text">统计</span>
                 <span class="nav-arrow">▸</span>
                 <div class="sub-menu">
                     <div class="sub-item" data-subview="dashboard">📈 仪表盘</div>
                     <div class="sub-item" data-subview="gallery">🖼️ 画册</div>
                     <div class="sub-item" data-subview="heatmap">🔥 热力图</div>
-                    <div class="sub-item" data-subview="calendar">☃ 日历</div>
+                    <div class="sub-item" data-subview="calendar">📅 日历</div>
                 </div>
             </div>
 
             <!-- 书评 -->
             <div class="nav-item" data-view="reviews">
-                <span class="nav-icon">✎</span>
+                <span class="nav-icon">✍️</span>
                 <span class="nav-text">书评</span>
             </div>
 
             <!-- 关于我 -->
             <div class="nav-item" data-view="about">
-                <span class="nav-icon">☂</span>
+                <span class="nav-icon">👤</span>
                 <span class="nav-text">关于我</span>
             </div>
 
@@ -71,7 +71,7 @@
         <!-- 底部 -->
         <div class="sidebar-footer">
             <div class="nav-item" onclick="toggleTheme()">
-                <span class="nav-icon" id="theme-icon">☪</span>
+                <span class="nav-icon" id="theme-icon">🌙</span>
                 <span class="nav-text">夜间模式</span>
             </div>
         </div>
@@ -89,7 +89,7 @@
             <!-- 顶部栏 -->
             <header class="view-header">
                 <div>
-                    <h1 class="page-title">书库</h1>
+                    <h1 class="page-title">📚 书库</h1>
                     <p class="page-sub">共 <span id="book-count">0</span> 本书</p>
                 </div>
                 <div class="header-actions">
@@ -112,7 +112,7 @@
 
             <header class="view-header">
                 <div>
-                    <h1 class="page-title">阅读统计</h1>
+                    <h1 class="page-title">📊 阅读统计</h1>
                     <p class="page-sub">你的阅读时光可视化</p>
                 </div>
             </header>
@@ -122,7 +122,7 @@
                 <button class="stats-tab active" data-subview="dashboard">📈 仪表盘</button>
                 <button class="stats-tab" data-subview="gallery">🖼️ 画册</button>
                 <button class="stats-tab" data-subview="heatmap">🔥 热力图</button>
-                <button class="stats-tab" data-subview="calendar">☃ 日历</button>
+                <button class="stats-tab" data-subview="calendar">📅 日历</button>
             </div>
 
             <!-- 仪表盘 -->
@@ -171,7 +171,7 @@
             <!-- 日历 -->
             <div class="stats-subview hidden" id="subview-calendar">
                 <div class="calendar-placeholder">
-                    <div class="calendar-icon">☃</div>
+                    <div class="calendar-icon">📅</div>
                     <p>阅读日历（开发中）</p>
                     <small>按日期查看阅读记录</small>
                 </div>
@@ -183,7 +183,7 @@
         <section class="view-panel hidden" id="view-reviews">
             <header class="view-header">
                 <div>
-                    <h1 class="page-title">书评</h1>
+                    <h1 class="page-title">✍️ 书评</h1>
                     <p class="page-sub">你的阅读感悟</p>
                 </div>
             </header>
@@ -198,7 +198,7 @@
         <section class="view-panel hidden" id="view-about">
             <header class="view-header">
                 <div>
-                    <h1 class="page-title">关于我</h1>
+                    <h1 class="page-title">👤 关于我</h1>
                     <p class="page-sub">阅读 OS · 个人版</p>
                 </div>
             </header>
