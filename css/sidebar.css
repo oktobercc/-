@@ -1,0 +1,699 @@
+/* =====================================================
+   Reading OS
+   Sidebar CSS
+
+   Left Navigation
+===================================================== */
+
+
+
+/* ===============================
+   侧边栏整体
+================================ */
+
+
+.sidebar{
+
+
+    width:260px;
+
+
+    height:100vh;
+
+
+    position:fixed;
+
+
+    left:0;
+
+
+    top:0;
+
+
+    background:
+
+    var(--card-color);
+
+
+    border-right:
+
+    1px solid var(--border-color);
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    padding:30px 20px;
+
+
+    transition:
+
+    .3s ease;
+
+
+    z-index:100;
+
+
+
+}
+
+
+
+
+
+
+
+/* ===============================
+   Logo
+================================ */
+
+
+.sidebar-logo{
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:12px;
+
+
+    padding:
+
+    0 10px;
+
+
+    margin-bottom:45px;
+
+
+}
+
+
+
+.logo-icon{
+
+
+    width:42px;
+
+
+    height:42px;
+
+
+    border-radius:14px;
+
+
+    background:
+
+    var(--primary);
+
+
+    color:
+
+    var(--card-color);
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:22px;
+
+
+    font-weight:700;
+
+
+}
+
+
+
+
+
+.logo-text{
+
+
+    font-size:22px;
+
+
+    font-weight:700;
+
+
+    letter-spacing:-.5px;
+
+
+}
+
+
+
+
+
+
+
+/* ===============================
+   导航菜单
+================================ */
+
+
+.sidebar-menu{
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:8px;
+
+
+    flex:1;
+
+
+}
+
+
+
+
+
+.sidebar-item{
+
+
+    height:48px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:15px;
+
+
+    padding:
+
+    0 16px;
+
+
+    border-radius:14px;
+
+
+    color:
+
+    var(--sub-text);
+
+
+    font-size:15px;
+
+
+    cursor:pointer;
+
+
+    transition:
+
+    .25s ease;
+
+
+}
+
+
+
+
+
+
+.sidebar-item:hover{
+
+
+    background:
+
+    rgba(0,0,0,.05);
+
+
+    color:
+
+    var(--text-color);
+
+
+}
+
+
+
+
+
+body.dark .sidebar-item:hover{
+
+
+    background:
+
+    rgba(255,255,255,.08);
+
+
+}
+
+
+
+
+
+
+
+/* 当前页面 */
+
+.sidebar-item.active{
+
+
+    background:
+
+    var(--primary);
+
+
+    color:
+
+    var(--card-color);
+
+
+    font-weight:600;
+
+
+}
+
+
+
+
+
+
+
+/* 图标 */
+
+
+.sidebar-icon{
+
+
+    width:22px;
+
+
+    height:22px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    font-size:18px;
+
+
+}
+
+
+
+
+
+
+.sidebar-text{
+
+
+    flex:1;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   分类标题
+================================ */
+
+
+.sidebar-title{
+
+
+    margin:
+
+    25px 10px 12px;
+
+
+    color:
+
+    var(--sub-text);
+
+
+    font-size:12px;
+
+
+    letter-spacing:1px;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   底部区域
+================================ */
+
+
+.sidebar-footer{
+
+
+    border-top:
+
+    1px solid var(--border-color);
+
+
+    padding-top:20px;
+
+
+}
+
+
+
+
+
+
+
+/* 设置按钮 */
+
+
+.sidebar-setting{
+
+
+    height:45px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    gap:14px;
+
+
+    padding:
+
+    0 16px;
+
+
+    border-radius:14px;
+
+
+    cursor:pointer;
+
+
+    color:
+
+    var(--sub-text);
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.sidebar-setting:hover{
+
+
+    background:
+
+    rgba(0,0,0,.05);
+
+
+    color:
+
+    var(--text-color);
+
+
+}
+
+
+
+
+
+body.dark .sidebar-setting:hover{
+
+
+    background:
+
+    rgba(255,255,255,.08);
+
+
+}
+
+
+
+
+
+
+
+
+
+/* ===============================
+   数量提示
+================================ */
+
+
+.sidebar-count{
+
+
+    margin-left:auto;
+
+
+    min-width:24px;
+
+
+    height:22px;
+
+
+    border-radius:12px;
+
+
+    display:flex;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    font-size:12px;
+
+
+    background:
+
+    #eeeeee;
+
+
+    color:#666;
+
+
+}
+
+
+
+
+body.dark .sidebar-count{
+
+
+    background:#333;
+
+
+    color:#aaa;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   主页面偏移
+================================ */
+
+
+
+body{
+
+
+    padding-left:260px;
+
+
+}
+
+
+
+
+
+.main{
+
+
+    margin-left:0;
+
+
+}
+
+
+
+
+
+
+
+/* ===============================
+   收缩状态
+================================ */
+
+
+.sidebar.collapsed{
+
+
+    width:80px;
+
+
+}
+
+
+
+.sidebar.collapsed
+.logo-text,
+
+
+.sidebar.collapsed
+.sidebar-text,
+
+
+.sidebar.collapsed
+.sidebar-count{
+
+
+    display:none;
+
+
+}
+
+
+
+.sidebar.collapsed
+.sidebar-item{
+
+
+    justify-content:center;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   深色模式
+================================ */
+
+
+body.dark .sidebar{
+
+
+    background:
+
+    #181818;
+
+
+}
+
+
+
+
+
+
+
+
+/* ===============================
+   移动端
+================================ */
+
+
+@media(max-width:900px){
+
+
+
+.sidebar{
+
+
+    transform:
+
+    translateX(-100%);
+
+
+}
+
+
+
+
+.sidebar.show{
+
+
+    transform:
+
+    translateX(0);
+
+
+}
+
+
+
+
+
+body{
+
+
+    padding-left:0;
+
+
+}
+
+
+
+
+.main{
+
+
+    margin-left:0;
+
+
+}
+
+
+
+}
