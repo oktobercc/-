@@ -1,0 +1,27 @@
+# =====================================================
+# 页间集 · Cloudflare Worker 配置
+#
+# 部署前把下面两个 id 换成你自己的（创建命令见 README.md）
+# =====================================================
+
+name = "yejianji-sync"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# 书目、选项、删除记录（一份 JSON）
+[[kv_namespaces]]
+binding = "KV"
+id = "在这里填 KV namespace id"
+
+# 封面、附件
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "yejianji-assets"
+
+[vars]
+# 只允许你自己的站点调用，填成你的 GitHub Pages 地址更稳妥；
+# 留 * 也能用（接口本来就要口令）
+ALLOWED_ORIGIN = "*"
+
+# 口令不写在这里，用命令行存成密钥：
+#   npx wrangler secret put SYNC_TOKEN

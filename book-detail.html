@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>页间集 · 书籍详情</title>
+
+<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="css/detail.css" />
+</head>
+
+<body>
+
+<header class="top-bar">
+    <button class="back-button" onclick="backShelf()">←</button>
+    <h2>书籍详情</h2>
+    <div class="top-bar-actions">
+        <button class="btn btn-secondary" onclick="editBook()">编辑</button>
+        <button class="btn btn-secondary danger-btn" onclick="removeBook()">删除</button>
+    </div>
+</header>
+
+<main class="detail-page">
+
+    <!-- ============ 概览 ============ -->
+    <section class="detail-hero">
+        <div class="detail-cover">
+            <img id="book-cover" src="assets/default-cover.jpg" alt="" />
+        </div>
+
+        <div class="detail-info">
+            <span class="status-badge" id="book-status">未读</span>
+            <h1 class="detail-title" id="book-title">加载中…</h1>
+            <p class="detail-author" id="book-author">未知作者</p>
+
+            <div class="rating-line hidden" id="rating-line">
+                <div class="hearts" id="hearts"></div>
+                <span class="rating-text" id="rating-text"></span>
+            </div>
+
+            <div class="detail-meta" id="detail-meta"></div>
+
+            <div class="detail-tags" id="book-tags"></div>
+
+            <div class="detail-actions">
+                <button class="btn btn-primary" onclick="startReading()">开始阅读</button>
+                <button class="btn btn-secondary" onclick="editBook()">编辑信息</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ 阅读计时 ============ -->
+    <section class="detail-card">
+        <div class="card-head">
+            <h3>阅读时长</h3>
+            <p class="card-hint">在这里按下开始，读完按结束，时长会累计到下面的记录里</p>
+        </div>
+
+        <div class="timer-row">
+            <div class="timer-clock" id="timer-clock">00:00:00</div>
+            <button class="btn btn-primary" id="timer-btn" onclick="toggleTimer()">开始计时</button>
+            <div class="timer-total">
+                累计 <strong id="total-time">0 分</strong> · 共 <strong id="read-count">0</strong> 次
+            </div>
+        </div>
+
+        <div class="progress-block">
+            <div class="progress-head">
+                <span>阅读进度</span>
+                <span id="progress-label">0%</span>
+            </div>
+            <div class="detail-progress-bar">
+                <div class="detail-progress-value" id="progress-value"></div>
+            </div>
+            <input type="range" id="progress-range" min="0" max="100" value="0" class="progress-range" />
+            <p class="progress-note" id="progress-note"></p>
+        </div>
+
+        <div class="session-list" id="session-list"></div>
+    </section>
+
+    <!-- ============ 简介 ============ -->
+    <section class="detail-card">
+        <div class="card-head"><h3>简介</h3></div>
+        <div class="rich-text" id="book-description">暂无简介</div>
+    </section>
+
+    <!-- ============ 附件 ============ -->
+    <section class="detail-card">
+        <div class="card-head">
+            <h3>附件</h3>
+            <p class="card-hint">下载文件需要密码</p>
+        </div>
+        <div class="attach-list" id="attach-list"></div>
+    </section>
+
+    <!-- ============ 书评 ============ -->
+    <section class="detail-card hidden" id="review-card">
+        <div class="card-head"><h3>书评</h3></div>
+        <div class="rich-text" id="book-review"></div>
+    </section>
+
+    <!-- ============ 书摘 ============ -->
+    <section class="detail-card hidden" id="excerpt-card">
+        <div class="card-head"><h3>书摘</h3></div>
+        <div class="excerpt-view" id="excerpt-view"></div>
+    </section>
+
+</main>
+
+<script src="js/storage.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/detail.js"></script>
+
+</body>
+</html>
