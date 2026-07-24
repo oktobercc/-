@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>页间集 - 书籍详情</title>
+
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/detail.css">
+</head>
+
+<body>
+
+<header class="top-bar">
+    <button class="back-button" onclick="backShelf()">←</button>
+    <h2>书籍详情</h2>
+</header>
+
+<main class="detail-container">
+
+    <div class="detail-cover">
+        <img id="book-cover" src="assets/default-cover.jpg" alt="book cover">
+    </div>
+
+    <section class="detail-info">
+
+        <h1 class="detail-title" id="book-title">加载中...</h1>
+
+        <div class="detail-author" id="book-author">未知作者</div>
+
+        <div class="detail-meta">
+            <div class="meta-item">
+                <span class="meta-label">出版社</span>
+                <span class="meta-value" id="book-publisher">未知</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">出版年份</span>
+                <span class="meta-value" id="book-year">未知</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">格式</span>
+                <span class="meta-value" id="book-type">EPUB</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">状态</span>
+                <span class="meta-value" id="book-status">未读</span>
+            </div>
+        </div>
+
+        <div class="detail-tags" id="book-tags"></div>
+
+        <div class="detail-description">
+            <div class="description-title">内容简介</div>
+            <p id="book-description">暂无简介</p>
+        </div>
+
+        <div class="detail-progress">
+            <div class="progress-header">
+                <span>阅读进度</span>
+                <span id="book-progress">0%</span>
+            </div>
+            <div class="detail-progress-bar">
+                <div class="detail-progress-value" id="progress-value"></div>
+            </div>
+        </div>
+
+        <div class="detail-actions">
+            <button class="read-button" onclick="startReading()">开始阅读</button>
+            <button class="favorite-button" onclick="toggleFavorite()">☆</button>
+        </div>
+
+    </section>
+
+</main>
+
+<section class="detail-stat">
+    <div class="stat-card">
+        <div class="stat-number" id="read-time">0分钟</div>
+        <div class="stat-label">阅读时间</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" id="read-count">0</div>
+        <div class="stat-label">阅读次数</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" id="note-count">0</div>
+        <div class="stat-label">笔记数量</div>
+    </div>
+</section>
+
+<script src="js/storage.js"></script>
+<script src="js/detail.js"></script>
+
+</body>
+</html>
