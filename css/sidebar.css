@@ -1,0 +1,240 @@
+/* =====================================================
+   Reading OS
+   Sidebar CSS
+
+   Left Navigation
+   （类名已与 index.html 实际结构对齐：
+     .sidebar-header / .sidebar-nav / .nav-item /
+     .nav-icon / .nav-text / .nav-badge / .nav-arrow /
+     .sub-menu / .sub-item）
+===================================================== */
+
+/* ===============================
+   侧边栏整体
+================================ */
+.sidebar{
+    width:260px;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+    background:var(--card-color);
+    border-right:1px solid var(--border-color);
+    display:flex;
+    flex-direction:column;
+    padding:30px 20px;
+    transition:.3s ease;
+    z-index:100;
+    overflow-y:auto;
+}
+
+/* ===============================
+   Logo / 顶部
+================================ */
+.sidebar-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 10px;
+    margin-bottom:45px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    background:var(--primary);
+    color:var(--card-color);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:22px;
+    font-weight:700;
+    overflow:hidden;
+}
+
+.logo-icon img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:14px;
+}
+
+.logo-text{
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:-.5px;
+}
+
+/* ===============================
+   导航菜单
+================================ */
+.sidebar-nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    flex:1;
+}
+
+.nav-item{
+    position:relative;
+    height:48px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:0 16px;
+    border-radius:14px;
+    color:var(--sub-text);
+    font-size:15px;
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.nav-item:hover{
+    background:rgba(0,0,0,.05);
+    color:var(--text-color);
+}
+
+body.dark .nav-item:hover{
+    background:rgba(255,255,255,.08);
+}
+
+/* 当前页面 */
+.nav-item.active{
+    background:var(--primary);
+    color:var(--card-color);
+    font-weight:600;
+}
+
+/* 图标 */
+.nav-icon{
+    width:22px;
+    height:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.nav-text{
+    flex:1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* 展开箭头（含子菜单的项） */
+.nav-arrow{
+    font-size:12px;
+    transition:transform .25s ease;
+}
+
+.nav-item.has-sub.open .nav-arrow{
+    transform:rotate(90deg);
+}
+
+/* 数量角标 */
+.nav-badge{
+    margin-left:auto;
+    min-width:22px;
+    height:20px;
+    padding:0 6px;
+    border-radius:12px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:11px;
+    background:#eeeeee;
+    color:#666;
+}
+
+.nav-item.active .nav-badge{
+    background:rgba(255,255,255,.25);
+    color:inherit;
+}
+
+body.dark .nav-badge{
+    background:#333;
+    color:#aaa;
+}
+
+/* ===============================
+   子菜单（统计 -> 仪表盘/画册/热力图/日历）
+================================ */
+.sub-menu{
+    display:none;
+    flex-direction:column;
+    gap:2px;
+    margin:4px 0 8px 37px;
+}
+
+.nav-item.has-sub.open + .sub-menu,
+.nav-item.has-sub.open .sub-menu{
+    display:flex;
+}
+
+/* sub-menu 是 nav-item 的子元素，直接用 display 切换 */
+.sub-menu.show{
+    display:flex;
+}
+
+.sub-item{
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    color:var(--sub-text);
+    cursor:pointer;
+    transition:.2s;
+}
+
+.sub-item:hover{
+    background:rgba(0,0,0,.05);
+    color:var(--text-color);
+}
+
+body.dark .sub-item:hover{
+    background:rgba(255,255,255,.08);
+}
+
+.sub-item.active{
+    color:var(--text-color);
+    font-weight:600;
+    background:rgba(0,0,0,.05);
+}
+
+body.dark .sub-item.active{
+    background:rgba(255,255,255,.08);
+}
+
+/* ===============================
+   底部区域
+================================ */
+.sidebar-footer{
+    border-top:1px solid var(--border-color);
+    padding-top:20px;
+}
+
+.sidebar-footer .nav-item{
+    color:var(--sub-text);
+}
+
+/* ===============================
+   深色模式
+================================ */
+body.dark .sidebar{
+    background:#181818;
+}
+
+/* ===============================
+   移动端
+================================ */
+@media(max-width:900px){
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.show{
+        transform:translateX(0);
+    }
+}
