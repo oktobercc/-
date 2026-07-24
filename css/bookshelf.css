@@ -25,8 +25,8 @@
      --cover-ratio 封面宽高比，3/4 最瘦高，5/6 中等，1/1 最矮
 ================================ */
 .bookshelf{
-    --card-min:250px;
-    --cover-ratio:5 / 6;
+    --card-min:350px;
+    --cover-ratio:3 / 4;
 
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(var(--card-min), 1fr));
@@ -39,7 +39,7 @@
 ================================ */
 .book-card{
     background:#fff;
-    border-radius:20px;
+    border-radius:10px;
     padding:14px;
     cursor:pointer;
     border:1px solid #eeeeee;
@@ -50,7 +50,7 @@
 
 .book-card:hover{
     transform:translateY(-8px);
-    box-shadow:0 18px 45px rgba(0,0,0,.08);
+    box-shadow:0 18px 30px rgba(0,0,0,.07);
 }
 
 /* ===============================
@@ -106,7 +106,7 @@
 .book-status{
     display:inline-flex;
     padding:5px 13px;
-    border-radius:20px;
+    border-radius:10px;
     font-size:12px;
 }
 
@@ -139,7 +139,7 @@
    阅读进度
 ================================ */
 .progress-box{
-    margin-top:13px;
+    margin-top:9px;
 }
 
 .progress-text{
