@@ -12,7 +12,7 @@
    书架容器
 ================================ */
 .bookshelf-container{
-    padding:40px 50px;
+    padding:40px 60px;
     width:100%;
 }
 
@@ -25,8 +25,8 @@
      --cover-ratio 封面宽高比，3/4 最瘦高，5/6 中等，1/1 最矮
 ================================ */
 .bookshelf{
-    --card-min:195px;
-    --cover-ratio:5 / 6;
+    --card-min:205px;
+    --cover-ratio:3 / 4;
 
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(var(--card-min), 1fr));
