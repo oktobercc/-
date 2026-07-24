@@ -1,0 +1,816 @@
+/* =====================================================
+   Reading OS
+   Bookshelf CSS
+
+   Index Page
+   Book Collection UI
+   （网格容器类名已从 .books-grid 改为 .bookshelf，
+     与 index.html 中 <div class="bookshelf" id="bookshelf"> 对齐）
+===================================================== */
+
+/* ===============================
+   书架容器
+================================ */
+.bookshelf-container{
+    padding:40px 50px;
+    width:100%;
+}
+
+/* ===============================
+   书籍网格
+   注意：index.html 中书架容器的 class 是 "bookshelf"
+
+   要调卡片形状，只动下面这两个变量：
+     --card-min   卡片最小宽度，调大 = 卡片更宽、每行更少
+     --cover-ratio 封面宽高比，3/4 最瘦高，5/6 中等，1/1 最矮
+================================ */
+.bookshelf{
+    --card-min:185px;
+    --cover-ratio:5 / 6;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(var(--card-min), 1fr));
+    gap:28px 26px;
+    width:100%;
+}
+
+/* ===============================
+   单本书卡片
+================================ */
+.book-card{
+    background:#fff;
+    border-radius:20px;
+    padding:14px;
+    cursor:pointer;
+    border:1px solid #eeeeee;
+    transition:all .35s ease;
+    overflow:hidden;
+    position:relative;
+}
+
+.book-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 18px 45px rgba(0,0,0,.08);
+}
+
+/* ===============================
+   封面
+================================ */
+.book-cover-wrapper{
+    width:100%;
+    aspect-ratio:var(--cover-ratio, 5 / 6);
+    overflow:hidden;
+    border-radius:14px;
+    background:#f4f4f4;
+}
+
+.book-cover{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.5s;
+}
+
+.book-card:hover .book-cover{
+    transform:scale(1.05);
+}
+
+/* ===============================
+   信息区域
+================================ */
+.book-info{
+    padding:12px 4px 2px;
+}
+
+/* 书名 */
+.book-title{
+    font-size:15px;
+    font-weight:600;
+    color:#222;
+    margin-bottom:6px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+/* 作者 */
+.book-author{
+    color:#999;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+/* ===============================
+   阅读状态
+================================ */
+.book-status{
+    display:inline-flex;
+    padding:5px 13px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.status-unread{
+    background:#f3f3f3;
+    color:#888;
+}
+
+.status-reading{
+    background:#edf3ff;
+    color:#6685c7;
+}
+
+.status-read{
+    background:#f4f1eb;
+    color:#9b7950;
+}
+
+.status-paused{
+    background:#fff5e8;
+    color:#c58a42;
+}
+
+.status-abandoned{
+    background:#faeeee;
+    color:#b67878;
+}
+
+/* ===============================
+   阅读进度
+================================ */
+.progress-box{
+    margin-top:13px;
+}
+
+.progress-text{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:#999;
+    margin-bottom:7px;
+}
+
+.progress-bar{
+    width:100%;
+    height:5px;
+    background:#eeeeee;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-value{
+    height:100%;
+    background:#222;
+    border-radius:10px;
+    transition:width .5s ease;
+}
+
+/* ===============================
+   删除按钮（js/app.js 生成的 .delete-book）
+================================ */
+.delete-book{
+    margin-top:10px;
+    width:100%;
+    height:32px;
+    border-radius:20px;
+    background:transparent;
+    border:1px solid #eeeeee;
+    color:#999;
+    font-size:12px;
+    transition:.25s;
+}
+
+.delete-book:hover{
+    background:#faeeee;
+    border-color:#f3d6d6;
+    color:#b67878;
+}
+
+body.dark .delete-book{
+    border-color:#333;
+    color:#888;
+}
+
+body.dark .delete-book:hover{
+    background:#2a1f1f;
+    border-color:#4a3333;
+    color:#e08a8a;
+}
+
+/* ===============================
+   添加书籍卡片
+================================ */
+.add-book-card{
+    min-height:380px;
+    border:1px dashed #d8d8d8;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    color:#aaa;
+    background:#fafafa;
+}
+
+.add-book-card:hover{
+    background:#fff;
+    border-color:#aaa;
+}
+
+.add-book-icon{
+    font-size:45px;
+    font-weight:200;
+    margin-bottom:15px;
+}
+
+/* ===============================
+   搜索隐藏
+================================ */
+.book-card.hidden{
+    display:none;
+}
+
+/* ===============================
+   空书库
+================================ */
+.empty-books{
+    grid-column:1/-1;
+    text-align:center;
+    padding:120px 0;
+    color:#aaa;
+}
+
+.empty-books p{
+    font-size:15px;
+}
+
+/* ===============================
+   深色模式
+================================ */
+body.dark .book-card{
+    background:#1d1d1d;
+    border-color:#333;
+}
+
+body.dark .book-title{
+    color:#eee;
+}
+
+body.dark .book-author{
+    color:#999;
+}
+
+body.dark .progress-bar{
+    background:#333;
+}
+
+body.dark .progress-value{
+    background:#eee;
+}
+
+body.dark .add-book-card{
+    background:#161616;
+    border-color:#444;
+}
+
+/* ===============================
+   动画
+================================ */
+.book-card{
+    animation:bookAppear .35s ease;
+}
+
+@keyframes bookAppear{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* ===============================
+   响应式
+================================ */
+@media(max-width:1200px){
+    .bookshelf{
+        --card-min:172px;
+        gap:24px 20px;
+    }
+}
+
+@media(max-width:900px){
+    .bookshelf{
+        --card-min:160px;
+    }
+
+    .bookshelf-container{
+        padding:30px;
+    }
+}
+
+@media(max-width:600px){
+    .bookshelf{
+        --card-min:140px;
+        gap:18px 14px;
+    }
+
+    .bookshelf-container{
+        padding:20px;
+    }
+}
+
+/* =====================================================
+   卡片操作：右上角 ··· 菜单 / 多选 / 私密
+   （配合 js/shelf-menu.js）
+===================================================== */
+
+/* 长按多选时别选中文字、别弹 iOS 的系统菜单 */
+.book-card{
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    user-select:none;
+}
+
+/* ===============================
+   右上角 ··· 按钮
+================================ */
+.card-menu-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,.86);
+    backdrop-filter:blur(6px);
+    color:#333;
+    font-size:16px;
+    line-height:1;
+    letter-spacing:1px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(-4px);
+    transition:opacity .2s ease, transform .2s ease, background .2s ease;
+    z-index:3;
+}
+
+/* 鼠标移到卡片上才浮现；触屏没有 hover，直接常驻 */
+.book-card:hover .card-menu-btn,
+.card-menu-btn:focus-visible{
+    opacity:1;
+    transform:none;
+}
+
+@media(hover:none){
+    .card-menu-btn{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.card-menu-btn:hover{
+    background:#fff;
+}
+
+body.dark .card-menu-btn{
+    background:rgba(40,40,40,.86);
+    color:#eee;
+}
+
+/* 多选时藏起来，避免和勾选框打架 */
+.bookshelf.selecting .card-menu-btn{
+    display:none;
+}
+
+/* ===============================
+   浮层菜单（挂在 body 上，不会被卡片裁掉）
+================================ */
+.card-menu{
+    position:fixed;
+    min-width:150px;
+    max-width:min(78vw, 320px);
+    padding:6px;
+    border-radius:14px;
+    background:var(--card-color);
+    border:1px solid var(--border-color);
+    box-shadow:0 16px 40px rgba(0,0,0,.16);
+    z-index:2000;
+    animation:menuIn .16s ease;
+}
+
+@keyframes menuIn{
+    from{ opacity:0; transform:translateY(-6px); }
+    to{ opacity:1; transform:none; }
+}
+
+.card-menu hr{
+    border:none;
+    border-top:1px solid var(--border-color);
+    margin:5px 8px;
+}
+
+.card-menu-item{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border:none;
+    border-radius:10px;
+    background:transparent;
+    color:var(--text-color);
+    font-size:14px;
+    text-align:left;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    cursor:pointer;
+}
+
+.card-menu-item:hover{
+    background:rgba(0,0,0,.05);
+}
+
+body.dark .card-menu-item:hover{
+    background:rgba(255,255,255,.08);
+}
+
+.card-menu-item.danger{
+    color:#b67878;
+}
+
+.card-menu-item .mi-icon{
+    width:18px;
+    text-align:center;
+    flex-shrink:0;
+}
+
+/* ===============================
+   多选：勾选框 + 选中态
+================================ */
+.card-check{
+    position:absolute;
+    top:20px;
+    left:20px;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,.9);
+    background:rgba(0,0,0,.25);
+    box-shadow:0 2px 8px rgba(0,0,0,.18);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:3;
+}
+
+.bookshelf.selecting .card-check{
+    display:flex;
+}
+
+.book-card.checked .card-check{
+    background:#222;
+    border-color:#fff;
+}
+
+.book-card.checked .card-check::after{
+    content:"✓";
+    color:#fff;
+    font-size:14px;
+    line-height:1;
+}
+
+body.dark .book-card.checked .card-check{
+    background:#eee;
+}
+
+body.dark .book-card.checked .card-check::after{
+    color:#111;
+}
+
+.bookshelf.selecting .book-card{
+    transition:transform .18s ease, box-shadow .18s ease;
+}
+
+.bookshelf.selecting .book-card:hover{
+    transform:none;
+    box-shadow:none;
+}
+
+.book-card.checked{
+    outline:2px solid #222;
+    outline-offset:-1px;
+}
+
+body.dark .book-card.checked{
+    outline-color:#eee;
+}
+
+/* ===============================
+   私密书籍
+================================ */
+.book-card.is-private .book-cover{
+    filter:blur(14px) brightness(.92);
+    transform:scale(1.12);
+}
+
+.book-card.is-private:hover .book-cover{
+    transform:scale(1.12);
+}
+
+.private-badge{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    font-size:26px;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));
+}
+
+.book-cover-wrapper{
+    position:relative;
+}
+
+/* ===============================
+   批量操作条
+================================ */
+.batch-bar{
+    position:fixed;
+    left:calc(var(--content-left, 260px) + 24px);
+    right:24px;
+    bottom:22px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 16px;
+    border-radius:18px;
+    background:var(--card-color);
+    border:1px solid var(--border-color);
+    box-shadow:0 18px 45px rgba(0,0,0,.16);
+    z-index:1500;
+    animation:barIn .22s ease;
+}
+
+@keyframes barIn{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:none; }
+}
+
+.batch-count{
+    font-size:14px;
+    color:var(--sub-text);
+    white-space:nowrap;
+    flex-shrink:0;
+}
+
+.batch-count b{
+    color:var(--text-color);
+    font-size:16px;
+    margin:0 2px;
+}
+
+.batch-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex:1;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.batch-actions::-webkit-scrollbar{
+    display:none;
+}
+
+.batch-btn{
+    height:34px;
+    padding:0 14px;
+    border-radius:18px;
+    border:1px solid var(--border-color);
+    background:transparent;
+    color:var(--text-color);
+    font-size:13px;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.batch-btn:hover{
+    background:rgba(0,0,0,.05);
+}
+
+body.dark .batch-btn:hover{
+    background:rgba(255,255,255,.08);
+}
+
+.batch-btn.danger{
+    color:#b67878;
+    border-color:#f0dada;
+}
+
+.batch-btn.danger:hover{
+    background:#faeeee;
+}
+
+body.dark .batch-btn.danger{
+    border-color:#4a3333;
+}
+
+body.dark .batch-btn.danger:hover{
+    background:#2a1f1f;
+}
+
+.batch-cancel{
+    height:34px;
+    padding:0 14px;
+    border-radius:18px;
+    border:none;
+    background:var(--primary);
+    color:var(--card-color);
+    font-size:13px;
+    flex-shrink:0;
+    cursor:pointer;
+}
+
+/* ===============================
+   选项面板（添加标签 / 设置分类）
+================================ */
+.sheet-mask{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    z-index:2500;
+    animation:menuIn .18s ease;
+}
+
+.sheet{
+    width:100%;
+    max-width:420px;
+    max-height:80vh;
+    overflow-y:auto;
+    padding:22px;
+    border-radius:20px;
+    background:var(--card-color);
+    box-shadow:0 24px 60px rgba(0,0,0,.25);
+}
+
+.sheet-title{
+    font-size:17px;
+    margin-bottom:6px;
+}
+
+.sheet-hint{
+    font-size:13px;
+    color:var(--sub-text);
+    margin-bottom:14px;
+}
+
+.sheet-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:16px;
+}
+
+.sheet-chip{
+    padding:8px 14px;
+    border-radius:16px;
+    border:1px solid var(--border-color);
+    background:transparent;
+    color:var(--text-color);
+    font-size:13px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.sheet-chip:hover{
+    background:var(--primary);
+    color:var(--card-color);
+    border-color:var(--primary);
+}
+
+.sheet-new{
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+}
+
+.sheet-input{
+    flex:1;
+    height:38px;
+    padding:0 14px;
+    border-radius:12px;
+    border:1px solid var(--border-color);
+    background:var(--bg-color);
+    color:var(--text-color);
+    font-size:14px;
+    outline:none;
+}
+
+.sheet-add,
+.sheet-cancel{
+    height:38px;
+    padding:0 16px;
+    border-radius:12px;
+    border:1px solid var(--border-color);
+    background:transparent;
+    color:var(--text-color);
+    font-size:13px;
+    cursor:pointer;
+}
+
+.sheet-add{
+    background:var(--primary);
+    color:var(--card-color);
+    border-color:var(--primary);
+}
+
+.sheet-foot{
+    display:flex;
+    justify-content:flex-end;
+}
+
+/* ===============================
+   提示条
+================================ */
+.shelf-toast{
+    position:fixed;
+    left:50%;
+    bottom:96px;
+    transform:translateX(-50%);
+    max-width:80vw;
+    padding:11px 20px;
+    border-radius:14px;
+    background:rgba(28,28,28,.92);
+    color:#fff;
+    font-size:14px;
+    z-index:3000;
+    animation:menuIn .2s ease;
+    transition:opacity .3s ease;
+}
+
+.shelf-toast.out{
+    opacity:0;
+}
+
+/* ===============================
+   手机端
+================================ */
+@media(max-width:900px){
+    .batch-bar{
+        left:12px;
+        right:12px;
+        bottom:12px;
+        padding:10px 12px;
+        gap:10px;
+    }
+
+    .card-menu-btn,
+    .card-check{
+        top:16px;
+    }
+
+    .card-menu-btn{
+        right:16px;
+    }
+
+    .card-check{
+        left:16px;
+    }
+}
+
+@media(max-width:600px){
+    .batch-bar{
+        flex-wrap:wrap;
+    }
+
+    .batch-count{
+        order:1;
+    }
+
+    .batch-cancel{
+        order:2;
+        margin-left:auto;
+    }
+
+    .batch-actions{
+        order:3;
+        width:100%;
+        flex:none;
+    }
+}
+
+/* 批量条浮在底部时，给书架留出高度，最后一行不会被压住 */
+body.batch-open .bookshelf-container{
+    padding-bottom:110px;
+}
