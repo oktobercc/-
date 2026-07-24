@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reading OS - 阅读</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>页间集 · 阅读</title>
 
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/reader.css">
+<!-- 阅读器样式已并入 main.css，之前 reader.html 引用的 css/reader.css 并不存在 -->
+<link rel="stylesheet" href="css/main.css" />
 </head>
 
 <body class="reader-page">
@@ -14,7 +14,7 @@
 <header class="reader-toolbar">
     <div class="toolbar-left">
         <button class="reader-btn" onclick="closeReader()">←</button>
-        <span class="reader-book-title" id="reader-title">正在加载...</span>
+        <span class="reader-book-title" id="reader-title">正在加载…</span>
     </div>
 
     <div class="toolbar-right">
@@ -29,7 +29,7 @@
     <button class="page-button left" onclick="prevPage()">‹</button>
 
     <div id="reader" class="reader-content">
-        <div class="loading">正在打开书籍...</div>
+        <div class="loading">正在打开书籍…</div>
     </div>
 
     <button class="page-button right" onclick="nextPage()">›</button>

@@ -5,64 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>页间集 · 阅读 OS</title>
 
-    <!-- 全局样式 -->
     <link rel="stylesheet" href="css/main.css" />
-    <!-- 侧边栏（悬停展开） -->
     <link rel="stylesheet" href="css/sidebar.css" />
-    <!-- 书架 4 列网格 -->
     <link rel="stylesheet" href="css/bookshelf.css" />
-    <!-- 统计视图 -->
     <link rel="stylesheet" href="css/stats.css" />
-
-    <!-- epub.js 用于阅读器 -->
-    <script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
 </head>
 <body>
 
-    <!-- ============================================================
-    左侧导航栏
-    ============================================================ -->
+    <!-- ============ 左侧导航 ============ -->
     <aside class="sidebar" id="sidebar">
 
-        <!-- Logo -->
         <div class="sidebar-header">
-            <span class="logo-icon"><img src="assets/images/logo.png" alt=""/></span>
+            <span class="logo-icon"><img src="assets/images/logo.png" alt="" /></span>
             <span class="logo-text">页间集</span>
         </div>
 
-        <!-- 导航菜单 -->
         <nav class="sidebar-nav">
-
-            <!-- 书库 -->
             <div class="nav-item active" data-view="library">
                 <span class="nav-icon">▥</span>
                 <span class="nav-text">书库</span>
                 <span class="nav-badge" id="nav-badge">0</span>
             </div>
 
-            <!-- 统计（含子菜单） -->
-            <div class="nav-item has-sub" data-view="stats">
+            <div class="nav-item" data-view="stats">
                 <span class="nav-icon">☑</span>
                 <span class="nav-text">统计</span>
-                <span class="nav-arrow">▸</span>
-                
             </div>
 
-            <!-- 书评 -->
             <div class="nav-item" data-view="reviews">
                 <span class="nav-icon">✎</span>
                 <span class="nav-text">书评</span>
             </div>
 
-            <!-- 关于我 -->
             <div class="nav-item" data-view="about">
                 <span class="nav-icon">☂</span>
                 <span class="nav-text">关于我</span>
             </div>
-
         </nav>
 
-        <!-- 底部 -->
         <div class="sidebar-footer">
             <div class="nav-item" onclick="toggleTheme()">
                 <span class="nav-icon" id="theme-icon">☪</span>
@@ -72,36 +52,29 @@
 
     </aside>
 
-    <!-- ============================================================
-    主内容区域
-    ============================================================ -->
+    <!-- ============ 主内容 ============ -->
     <main class="main-content">
 
-        <!-- ===================== 书库视图 ===================== -->
+        <!-- 书库 -->
         <section class="view-panel" id="view-library">
-
             <header class="view-header">
                 <div>
                     <h1 class="page-title">书库</h1>
                     <p class="page-sub">共 <span id="book-count">0</span> 本书</p>
                 </div>
                 <div class="header-actions">
-                    <input class="search-box" type="text" placeholder="搜索书名或作者…" oninput="searchBooks(this.value)" />
-                    <button class="add-button" onclick="importBook()">＋ 添加书籍</button>
+                    <input class="search-box" type="text" placeholder="搜索书名、作者、标签…" oninput="searchBooks(this.value)" />
+                    <button class="add-button" onclick="addBookPage()">＋ 添加书籍</button>
                 </div>
             </header>
 
             <div class="bookshelf-container">
-                <div class="bookshelf" id="bookshelf">
-                    <!-- JS 动态渲染 -->
-                </div>
+                <div class="bookshelf" id="bookshelf"></div>
             </div>
-
         </section>
 
-        <!-- ===================== 统计视图 ===================== -->
+        <!-- 统计 -->
         <section class="view-panel hidden" id="view-stats">
-
             <header class="view-header">
                 <div>
                     <h1 class="page-title">阅读统计</h1>
@@ -123,7 +96,7 @@
                         <div class="stat-label">总藏书</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="stat-total-time">0 分钟</div>
+                        <div class="stat-number" id="stat-total-time">0 秒</div>
                         <div class="stat-label">阅读总时长</div>
                     </div>
                     <div class="stat-card">
@@ -138,14 +111,12 @@
                 <div class="chart-placeholder">
                     <div class="chart-icon">📊</div>
                     <p>阅读时长趋势图（开发中）</p>
-                    <small>基于你的阅读数据生成</small>
+                    <small>基于你的阅读记录生成</small>
                 </div>
             </div>
 
             <div class="stats-subview hidden" id="subview-gallery">
-                <div class="gallery-grid" id="gallery-grid">
-                    <!-- JS 动态生成书籍封面墙 -->
-                </div>
+                <div class="gallery-grid" id="gallery-grid"></div>
             </div>
 
             <div class="stats-subview hidden" id="subview-heatmap">
@@ -163,10 +134,9 @@
                     <small>按日期查看阅读记录</small>
                 </div>
             </div>
-
         </section>
 
-        <!-- ===================== 书评视图 ===================== -->
+        <!-- 书评 -->
         <section class="view-panel hidden" id="view-reviews">
             <header class="view-header">
                 <div>
@@ -174,14 +144,15 @@
                     <p class="page-sub">你的阅读感悟</p>
                 </div>
             </header>
+            <div class="review-list"></div>
             <div class="empty-state-large">
                 <span class="empty-icon">📝</span>
                 <h3>还没有书评</h3>
-                <p>在阅读时记录你的想法吧</p>
+                <p>把书标成已读或弃读，就可以写书评了</p>
             </div>
         </section>
 
-        <!-- ===================== 关于我视图 ===================== -->
+        <!-- 关于我 -->
         <section class="view-panel hidden" id="view-about">
             <header class="view-header">
                 <div>
@@ -199,18 +170,14 @@
                         <span>📊 追踪阅读数据</span>
                         <span>✍️ 记录读书笔记</span>
                     </div>
-                    <div class="about-version">v2.0 · 2026</div>
+                    <div class="about-version">v3.0 · 2026</div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- ============================================================
-    JavaScript
-    ============================================================ -->
     <script src="js/storage.js"></script>
-    <script src="js/import.js"></script>
     <script src="js/app.js"></script>
 
 </body>

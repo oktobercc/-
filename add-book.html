@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>页间集 · 添加书籍</title>
+
+<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="css/form.css" />
+
+<script src="https://unpkg.com/epubjs/dist/epub.min.js"></script>
+</head>
+
+<body>
+
+<header class="top-bar">
+    <button class="back-button" onclick="goBack()">←</button>
+    <h2 id="page-heading">添加书籍</h2>
+    <div class="top-bar-actions">
+        <button class="btn btn-secondary" onclick="goBack()">取消</button>
+        <button class="btn btn-primary" onclick="submitBook()" id="save-btn">保存到书架</button>
+    </div>
+</header>
+
+<main class="form-page">
+
+    <!-- ============ 快速导入 ============ -->
+    <section class="form-card">
+        <div class="card-head">
+            <h3>快速填写</h3>
+            <p class="card-hint">从书籍链接或本地文件里读取信息，读到什么填什么，之后仍可手动改</p>
+        </div>
+
+        <div class="import-row">
+            <input type="text" id="import-url" class="field-input" placeholder="粘贴晋江 / 起点 / 番茄的作品链接" />
+            <button class="btn btn-secondary" onclick="importFromUrl()">按链接导入</button>
+        </div>
+
+        <div class="import-row">
+            <button class="btn btn-secondary" onclick="pickMetaFile()">从 EPUB / TXT 读取</button>
+            <button class="btn btn-secondary" onclick="toggleHtmlPaste()">粘贴网页源码导入</button>
+            <span class="import-status" id="import-status"></span>
+        </div>
+
+        <div class="html-paste hidden" id="html-paste">
+            <p class="card-hint">
+                浏览器有跨域限制，直接抓小说站的链接常常会被拦。遇到导入失败时：在作品页按 Ctrl+U
+                打开源码，全选复制，粘贴到下面。
+            </p>
+            <textarea id="html-source" class="field-input" rows="5" placeholder="在此粘贴网页源码"></textarea>
+            <button class="btn btn-secondary" onclick="importFromHtml()">解析并填入</button>
+        </div>
+    </section>
+
+    <!-- ============ 基础信息 ============ -->
+    <section class="form-card">
+        <div class="card-head"><h3>基础信息</h3></div>
+
+        <div class="form-grid">
+
+            <!-- 封面 -->
+            <div class="cover-field">
+                <label class="field-label">封面 <span class="label-note">3 : 4</span></label>
+                <div class="cover-slot" id="cover-slot" onclick="pickCover()">
+                    <img id="cover-preview" alt="" class="hidden" />
+                    <div class="cover-empty" id="cover-empty">
+                        <span class="cover-plus">＋</span>
+                        <span>上传封面</span>
+                    </div>
+                </div>
+                <div class="cover-actions">
+                    <button class="mini-btn" onclick="pickCover()">选择图片</button>
+                    <button class="mini-btn" onclick="recropCover()" id="recrop-btn" disabled>重新裁剪</button>
+                    <button class="mini-btn danger" onclick="clearCover()">移除</button>
+                </div>
+            </div>
+
+            <div class="fields">
+                <div class="field">
+                    <label class="field-label" for="f-title">书名 <em>*</em></label>
+                    <input class="field-input" id="f-title" placeholder="必填" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="f-author">作者</label>
+                    <input class="field-input" id="f-author" placeholder="未知作者" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="f-url">网址</label>
+                    <input class="field-input" id="f-url" placeholder="https://" />
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label class="field-label" for="f-words">字数</label>
+                        <input class="field-input" id="f-words" type="number" min="0" placeholder="例如 320000" />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="f-publisher">出版社</label>
+                        <input class="field-input" id="f-publisher" placeholder="出版社 / 发布平台" />
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label class="field-label">来源</label>
+                        <div class="select-with-add">
+                            <select class="field-input" id="f-source"></select>
+                            <button class="mini-btn" onclick="createOption('source')">新建</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="field-label">作品类型</label>
+                        <div class="select-with-add">
+                            <select class="field-input" id="f-category"></select>
+                            <button class="mini-btn" onclick="createOption('category')">新建</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label">标签</label>
+                    <div class="tag-picker" id="tag-picker"></div>
+                    <button class="mini-btn" onclick="createOption('tags')">新建标签</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="f-description">简介</label>
+            <textarea class="field-input desc-input" id="f-description" rows="6"
+                      placeholder="空一行分段，展示时段间距 0.6em"></textarea>
+        </div>
+    </section>
+
+    <!-- ============ 附件 ============ -->
+    <section class="form-card">
+        <div class="card-head">
+            <h3>附件</h3>
+            <p class="card-hint">支持 azw3 / txt / mobi / epub / pdf 等文件，也可以只存链接；可以加多个</p>
+        </div>
+
+        <div class="attach-actions">
+            <button class="btn btn-secondary" onclick="pickAttachments()">添加文件</button>
+            <button class="btn btn-secondary" onclick="addLinkAttachment()">添加链接</button>
+        </div>
+
+        <div class="attach-list" id="attach-list"></div>
+    </section>
+
+    <!-- ============ 阅读状态 ============ -->
+    <section class="form-card">
+        <div class="card-head"><h3>阅读状态</h3></div>
+
+        <div class="status-picker" id="status-picker">
+            <button class="status-chip" data-status="在读">在读</button>
+            <button class="status-chip" data-status="已读">已读</button>
+            <button class="status-chip" data-status="暂停">暂停</button>
+            <button class="status-chip" data-status="弃读">弃读</button>
+        </div>
+
+        <!-- 开始日期：在读 / 暂停 / 已读 -->
+        <div class="field conditional hidden" id="cond-start">
+            <label class="field-label" for="f-start">开始日期</label>
+            <input class="field-input date-input" id="f-start" type="date" />
+        </div>
+
+        <!-- 结束日期：仅已读 -->
+        <div class="field conditional hidden" id="cond-end">
+            <label class="field-label" for="f-end">结束日期</label>
+            <input class="field-input date-input" id="f-end" type="date" />
+        </div>
+
+        <!-- 评分：仅已读 -->
+        <div class="field conditional hidden" id="cond-rating">
+            <label class="field-label">评分</label>
+            <div class="rating-row">
+                <div class="hearts" id="hearts"></div>
+                <span class="rating-text" id="rating-text">未评分</span>
+                <button class="mini-btn" onclick="clearRating()">清除</button>
+            </div>
+        </div>
+
+        <!-- 书评：已读 / 弃读 -->
+        <div class="field conditional hidden" id="cond-review">
+            <label class="field-label" for="f-review">书评</label>
+            <textarea class="field-input desc-input" id="f-review" rows="5" placeholder="读完之后想说的话"></textarea>
+        </div>
+
+        <!-- 书摘：仅已读 -->
+        <div class="field conditional hidden" id="cond-excerpt">
+            <label class="field-label">书摘</label>
+            <div class="excerpt-list" id="excerpt-list"></div>
+            <button class="mini-btn" onclick="addExcerpt()">添加一条书摘</button>
+        </div>
+    </section>
+
+    <div class="form-footer">
+        <button class="btn btn-secondary" onclick="goBack()">取消</button>
+        <button class="btn btn-primary" onclick="submitBook()">保存到书架</button>
+    </div>
+
+</main>
+
+<!-- ============ 封面裁剪浮层 ============ -->
+<div class="cropper-mask hidden" id="cropper-mask">
+    <div class="cropper-panel">
+        <div class="cropper-head">
+            <h3>裁剪封面</h3>
+            <p class="card-hint">拖动方框移动，拖右下角改大小，比例锁定 3 : 4。直接点确定就是自动居中裁剪。</p>
+        </div>
+
+        <div class="cropper-stage" id="cropper-stage">
+            <img id="cropper-image" alt="" />
+            <div class="crop-box" id="crop-box">
+                <span class="crop-handle"></span>
+            </div>
+        </div>
+
+        <div class="cropper-foot">
+            <button class="btn btn-secondary" onclick="resetCrop()">重置</button>
+            <button class="btn btn-secondary" onclick="closeCropper()">取消</button>
+            <button class="btn btn-primary" onclick="confirmCrop()">确定</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/metadata.js"></script>
+<script src="js/cropper.js"></script>
+<script src="js/add-book.js"></script>
+
+</body>
+</html>
