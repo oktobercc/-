@@ -1,0 +1,49 @@
+# =====================================================
+# 页间集 · Cloudflare Worker 配置
+#
+# 部署前把下面的 id 换成你自己的（创建命令见 README.md）
+# =====================================================
+
+name = "yejianji-sync"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# 用户、书目、选项、删除记录、网盘绑定
+[[kv_namespaces]]
+binding = "KV"
+id = "KV"
+
+# 封面、附件
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "yejianji-assets"
+
+[vars]
+# 只允许你自己的站点调用，填成你的站点地址更稳妥；
+# 留 * 也能用（接口本来就要登录）
+ALLOWED_ORIGIN = "*"
+
+# 开放注册？自己一个人用的话建议改成 "false"，
+# 或者留着 true 但设一个 INVITE_CODE，
+# 不然别人拿到你的地址就能注册，白嫖你的 KV 和 R2
+ALLOW_REGISTER = "true"
+
+# 百度网盘的应用名。上传目录固定是 /apps/<这个名字>/，
+# 必须和你在开放平台创建应用时填的名字完全一致。
+# 不接百度就整行留空或删掉。
+BAIDU_APP_NAME = "页间集"
+
+# =====================================================
+# 下面这些是密钥，不写在这个文件里（会进 git），
+# 用命令行单独存：
+#
+#   npx wrangler secret put AUTH_SECRET      # 必需，签会话票用
+#   npx wrangler secret put INVITE_CODE      # 选填，注册邀请码
+#   npx wrangler secret put BAIDU_APP_KEY    # 接百度才需要
+#   npx wrangler secret put BAIDU_SECRET_KEY # 接百度才需要
+#   npx wrangler secret put SYNC_TOKEN       # 老版本的单口令，新部署可以不设
+#
+# AUTH_SECRET 随手生成一串就行：openssl rand -hex 32
+# ⚠️ 换掉 AUTH_SECRET 会让所有人被登出，网盘绑定也要重绑
+#    （网盘凭据是用它派生的密钥加密存的）。
+# =====================================================

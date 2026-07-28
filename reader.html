@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>阅读｜页间集</title>
+
+<!-- 阅读器样式已并入 main.css，之前 reader.html 引用的 css/reader.css 并不存在 -->
+<link rel="stylesheet" href="css/main.css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body class="reader-page">
+
+<header class="reader-toolbar">
+    <div class="toolbar-left">
+        <button class="reader-btn" onclick="closeReader()">←</button>
+        <span class="reader-book-title" id="reader-title">正在加载…</span>
+    </div>
+
+    <div class="toolbar-right">
+        
+        <button class="reader-btn" onclick="darkMode()">☾</button>
+        <button class="reader-btn" onclick="fullScreen()">⛶</button>
+    </div>
+    <div id="reader-controls">
+  <button id="toc-btn">目录</button>
+  
+  <!-- 字体选择器 -->
+  <select id="font-select">
+    <option value="STSong">华文宋体 (STSong)</option>
+    <option value="KaiTi">楷体</option>
+    <option value="STYuan">圆体</option>
+    <option value="LXGW WenKai">霞鹜文楷</option>
+    <option value="CangEr JinKai">仓耳今楷</option>
+    <option value="FZSongKeBenXiuKaiS-R-GB">方正宋刻本秀楷简体</option>
+    <option value="FZXiJinLingS-R-GB">方正细金陵简体</option>
+    <option value="PingFang SC">苹方</option>
+    <option value="FZShengShiKaiShu">方正盛世楷书</option>
+    <option value="JingHua LaoSong">京华老宋体</option>
+    <option value="Source Han Sans CN">思源黑体</option>
+    <option value="Source Han Serif CN">思源宋体</option>
+    <option value="FZYouSong">方正悠宋</option>
+  </select>
+
+  <!-- 本地字体导入 -->
+  <label class="btn-label">
+    添加本地字体
+    <input type="file" id="custom-font-input" accept=".ttf,.otf,.woff,.woff2" multiple hidden />
+  </label>
+
+  <!-- 样式微调 -->
+  <label>字号: <input type="range" id="size-slider" min="14" max="36" value="18"></label>
+  <label>粗细: <input type="range" id="weight-slider" min="100" max="900" step="100" value="400"></label>
+  <label>行距: <input type="range" id="lineheight-slider" min="1.0" max="2.5" step="0.1" value="1.3"></label>
+  <label>边距: <input type="range" id="padding-slider" min="0" max="60" value="20"></label>
+
+  <!-- 翻页效果选择 -->
+  <select id="transition-select">
+    <option value="simulation">仿真翻页</option>
+    <option value="slide">左右滑动</option>
+    <option value="scroll">上下滚动</option>
+    <option value="cover">覆盖翻页</option>
+    <option value="eink">Kindle 刷新模式</option>
+  </select>
+</div>
+
+<!-- 目录侧边栏 -->
+<div id="toc-sidebar" class="hidden">
+  <h3>目录</h3>
+  <ul id="toc-list"></ul>
+</div>
+
+
+</header>
+
+<main class="reader-main">
+
+    <button class="page-button left" onclick="turnPage('prev')">
+        ‹
+    </button>
+
+
+    <div id="viewer-container">
+        <div id="viewer">
+            <div class="loading">
+                正在打开书籍…
+            </div>
+        </div>
+    </div>
+
+
+    <button class="page-button right" onclick="turnPage('next')">
+        ›
+    </button>
+
+</main>
+
+<footer class="reader-footer">
+    <!-- 控制面板 (顶部或底部悬浮栏) -->
+
+    <div class="progress-container">
+        <div class="reader-progress" id="reader-progress"></div>
+    </div>
+    <div class="reader-info">
+        <span id="reading-progress-text">0%</span>
+    </div>
+</footer>
+
+<!-- 固定版本 + SRI，防 CDN 投毒 / 上游改动导致行为漂移 -->
+<script src="https://unpkg.com/epubjs@0.3.93/dist/epub.min.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/reader.js"></script>
+
+</body>
+</html>

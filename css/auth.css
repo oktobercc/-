@@ -1,0 +1,276 @@
+/* =====================================================
+   页间集 · 账号 / 网盘
+   变量沿用 main.css 里那一套，深色模式跟着一起变
+===================================================== */
+
+/* ===============================
+   通用：卡片里的一行行表单
+================================ */
+.auth-hint{
+    font-size:12px;
+    line-height:1.8;
+    color:var(--sub-text);
+    margin-top:12px;
+}
+
+.auth-hint strong{
+    color:var(--text-color);
+    font-weight:600;
+}
+
+.auth-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+}
+
+.auth-row .btn{
+    flex:1;
+    min-width:110px;
+}
+
+.backup-status.is-error{
+    color:#c0392b;
+}
+
+body.dark .backup-status.is-error{
+    color:#ff8a75;
+}
+
+/* ===============================
+   已登录时的身份条
+================================ */
+.auth-who{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    border-radius:14px;
+    background:var(--bg-color);
+    border:1px solid var(--border-color);
+}
+
+.auth-who-avatar{
+    width:36px;
+    height:36px;
+    flex:none;
+    border-radius:50%;
+    background:var(--card-color);
+    border:1px solid var(--border-color);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+}
+
+.auth-who-name{
+    font-size:15px;
+    font-weight:600;
+    line-height:1.4;
+}
+
+.auth-who-sub{
+    font-size:12px;
+    color:var(--sub-text);
+}
+
+/* 侧边栏底部的小标识 */
+.auth-chip{
+    font-size:12px;
+    color:var(--sub-text);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+/* ===============================
+   网盘：两个 provider 各占一块
+================================ */
+.nd-option{
+    padding:16px 0;
+    border-top:1px solid var(--border-color);
+}
+
+.nd-option:first-child{
+    border-top:none;
+    padding-top:4px;
+}
+
+.nd-option h4{
+    font-size:14px;
+    margin-bottom:4px;
+}
+
+.nd-option .nd-desc{
+    font-size:12px;
+    line-height:1.8;
+    color:var(--sub-text);
+    margin-bottom:12px;
+}
+
+.nd-option.nd-off{
+    opacity:.55;
+}
+
+.nd-option .btn[disabled]{
+    cursor:not-allowed;
+}
+
+/* ===============================
+   网盘文件浏览器
+================================ */
+.nd-mask{
+    position:fixed;
+    inset:0;
+    z-index:900;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.nd-mask.hidden{
+    display:none;
+}
+
+.nd-panel{
+    width:100%;
+    max-width:520px;
+    max-height:78vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--card-color);
+    border:1px solid var(--border-color);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+
+.nd-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 20px 14px;
+    border-bottom:1px solid var(--border-color);
+}
+
+.nd-head h3{
+    font-size:16px;
+}
+
+.nd-close{
+    border:none;
+    background:none;
+    color:var(--sub-text);
+    font-size:16px;
+    cursor:pointer;
+    padding:4px 8px;
+    border-radius:8px;
+}
+
+.nd-close:hover{
+    background:var(--bg-color);
+    color:var(--text-color);
+}
+
+.nd-path{
+    padding:10px 20px;
+    font-size:12px;
+    color:var(--sub-text);
+    border-bottom:1px solid var(--border-color);
+    overflow-x:auto;
+    white-space:nowrap;
+}
+
+.nd-crumb{
+    border:none;
+    background:none;
+    color:var(--sub-text);
+    font-size:12px;
+    cursor:pointer;
+    padding:2px 4px;
+    border-radius:6px;
+}
+
+.nd-crumb:hover{
+    color:var(--text-color);
+    background:var(--bg-color);
+}
+
+.nd-list{
+    flex:1;
+    overflow-y:auto;
+    padding:8px 0;
+}
+
+.nd-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 20px;
+    cursor:pointer;
+    font-size:14px;
+    transition:background .15s;
+}
+
+.nd-item:hover{
+    background:var(--bg-color);
+}
+
+.nd-icon{
+    flex:none;
+    width:18px;
+    text-align:center;
+    color:var(--sub-text);
+    font-size:13px;
+}
+
+.nd-item.is-dir .nd-icon{
+    color:var(--text-color);
+}
+
+.nd-name{
+    flex:1;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.nd-size{
+    flex:none;
+    font-size:12px;
+    color:var(--sub-text);
+}
+
+.nd-empty{
+    padding:40px 20px;
+    text-align:center;
+    font-size:13px;
+    color:var(--sub-text);
+}
+
+.nd-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 20px;
+    border-top:1px solid var(--border-color);
+}
+
+.nd-tip{
+    flex:1;
+    font-size:12px;
+    color:var(--sub-text);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+@media (max-width:520px){
+    .nd-panel{
+        max-height:88vh;
+    }
+}
